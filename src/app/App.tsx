@@ -1,5 +1,11 @@
+import AntdProvider from "./provider/antd/antd.provider";
+
 function App() {
-  return <></>;
+  return (
+    <AntdProvider>
+      <div>Hello World</div>
+    </AntdProvider>
+  );
 }
 
 export default App;
