@@ -27,7 +27,7 @@ const antdTheme: ThemeConfig = {
     // 폰트
     fontSize: 14,
     fontFamily:
-      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial',
+      '"Moneygraphy-Pixel", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
 
     // 스페이싱
     padding: 16,
