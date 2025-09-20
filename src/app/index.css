@@ -1,6 +1,6 @@
 @font-face {
   font-family: "Moneygraphy-Pixel";
-  src: url("/font/Moneygraphy-Pixel.woff2") format("woff2");
+  src: url("../shares/font/Moneygraphy-Pixel.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
