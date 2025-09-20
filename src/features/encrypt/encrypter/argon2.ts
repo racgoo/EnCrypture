@@ -6,9 +6,8 @@ import {
   ENCRYPT_HASH_SALT,
   ENCRYPT_HASH_TIME,
 } from "../constants";
-import type { Encrypter } from "./encrypter.interface";
 
-class Argon2Encrypter implements Encrypter {
+class Argon2Encrypter {
   public async hash(password: string) {
     const hashUint8Array = await argon2idAsync(password, ENCRYPT_HASH_SALT, {
       m: ENCRYPT_HASH_MEM, // memory

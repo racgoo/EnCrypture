@@ -1,1 +1,1 @@
-export { argon2Encrypter } from "./encrypter";
+export { argon2Encrypter, aesEncrypter } from "./encrypter";
