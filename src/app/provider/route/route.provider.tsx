@@ -1,6 +1,7 @@
 import { Navigate, RouterProvider, createHashRouter } from "react-router-dom";
 import { HomePage } from "@pages/home";
 import { EncryptPage } from "@pages/encrypt";
+import { DecryptPage } from "@pages/decrypt";
 
 const router = createHashRouter([
   {
@@ -10,6 +11,10 @@ const router = createHashRouter([
   {
     path: "/encrypt/:type",
     element: <EncryptPage />,
+  },
+  {
+    path: "/decrypt",
+    element: <DecryptPage />,
   },
   {
     path: "*",
