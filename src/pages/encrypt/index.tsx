@@ -1,166 +1,58 @@
-import {
-  CloudServerOutlined,
-  LockOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
-import {
-  Button,
-  Card,
-  Col,
-  message,
-  Radio,
-  Row,
-  Space,
-  Typography,
-  Upload,
-  type RadioChangeEvent,
-} from "antd";
-import type { RcFile } from "antd/es/upload";
-import { useCallback, useState } from "react";
-import { useType } from "./hooks/useType";
+import { message, Space, Typography } from "antd";
+import { useCallback } from "react";
+import { EncryptLayout } from "./components/EncryptLayout";
+import { FileUploadDragger } from "./components/FileUploadDragger";
+import { TypeDescription } from "./components/TypeDescription";
+import { TypeSelect } from "./components/TypeSelect";
+import { UploadButton } from "./components/UploadButton";
+import { MAX_FILE_SIZE_STRING } from "./constants";
+import { useFile } from "./hooks/useFile";
 
 const { Title, Text } = Typography;
 
-const MEGABYTE_SIZE = 1024 * 1024;
-const MAX_FILE_SIZE = 100 * MEGABYTE_SIZE;
-const MAX_FILE_SIZE_STRING = "100MB";
-
 function EncryptPage() {
-  const { type, changeType } = useType();
-
-  const [files, setFiles] = useState<RcFile[]>([]);
-
-  const handleTypeChange = useCallback(
-    (e: RadioChangeEvent) => {
-      const targetType = e.target.value;
-      changeType(targetType);
-    },
-    [changeType]
-  );
-
-  const handleBeforeUpload = useCallback(
-    (file: RcFile) => {
-      const nextFiles = [...files, file];
-
-      const totalSize = nextFiles.reduce((totalSize, file) => {
-        totalSize += file.size ?? 0;
-        return totalSize;
-      }, 0);
-
-      if (totalSize <= MAX_FILE_SIZE) {
-        setFiles(nextFiles);
-        return file;
-      }
-
-      message.error("100MB를 초과하는 파일은 업로드할 수 없습니다.");
-      return Upload.LIST_IGNORE;
-    },
-    [files]
-  );
+  const { files, handleAddFile, handleDeleteFile } = useFile();
 
   const handleUpload = useCallback(() => {
     message.info("암호화 기능은 곧 제공됩니다!");
   }, [files]);
 
   return (
-    <div>
-      <Row justify="center" style={{ minHeight: "80vh", alignItems: "center" }}>
-        <Col xs={24} sm={20} md={16} lg={12} xl={10}>
-          <Space direction="vertical" size="large" style={{ width: "100%" }}>
-            <Title level={2} style={{ textAlign: "center", marginBottom: 0 }}>
-              파일 암호화
-            </Title>
-            <Text
-              type="secondary"
-              style={{ textAlign: "center", display: "block" }}
-            >
-              여러 파일을 안전하게 암호화할 수 있습니다.
-              <br />
-              {MAX_FILE_SIZE_STRING} 이하의 파일만 업로드할 수 있습니다.
-            </Text>
-            <Radio.Group
-              value={type}
-              onChange={handleTypeChange}
-              style={{
-                width: "100%",
-                justifyContent: "center",
-                display: "flex",
-              }}
-              size="large"
-            >
-              <Radio.Button value="client" style={{ padding: "0 32px" }}>
-                <LockOutlined style={{ marginRight: 8 }} />
-                클라이언트
-              </Radio.Button>
-              <Radio.Button
-                value="server"
-                style={{ padding: "0 32px" }}
-                disabled
-              >
-                <CloudServerOutlined style={{ marginRight: 8 }} />
-                서버
-              </Radio.Button>
-            </Radio.Group>
+    <EncryptLayout>
+      <Space
+        direction="vertical"
+        size="large"
+        style={{ width: "100%", maxWidth: 600 }}
+      >
+        <Title level={2} style={{ textAlign: "center", marginBottom: 0 }}>
+          파일 암호화
+        </Title>
 
-            {type === "client" && (
-              <Text
-                type="secondary"
-                style={{
-                  textAlign: "center",
-                  display: "block",
-                }}
-              >
-                Argon2 알고리즘을 사용합니다.
-                <br />
-                최소 암호 해독 시간을 보장하여 무차별 대입 공격에 안전합니다.
-              </Text>
-            )}
+        <Text
+          type="secondary"
+          style={{ textAlign: "center", display: "block" }}
+        >
+          여러 파일을 안전하게 암호화할 수 있습니다.
+          <br />
+          {MAX_FILE_SIZE_STRING} 이하의 파일만 업로드할 수 있습니다.
+        </Text>
 
-            {type === "server" && (
-              <Text
-                type="secondary"
-                style={{ textAlign: "center", display: "block" }}
-              >
-                해싱된 사용자의 암호가 서버에 저장되어 열람 기간, 암호 입력 시도
-                제한 등 다양한 보안 기능을 제공합니다.
-              </Text>
-            )}
+        <TypeSelect />
 
-            <Upload.Dragger
-              multiple
-              fileList={files}
-              beforeUpload={handleBeforeUpload}
-              accept="*"
-              style={{
-                borderRadius: 12,
-                borderColor: "#1677ff33",
-              }}
-            >
-              <p style={{ margin: 0 }}>
-                <UploadOutlined style={{ fontSize: 32, color: "#1677ff" }} />
-              </p>
-              <Text strong>
-                여기에 파일을 드래그하거나 클릭해서 업로드하세요
-              </Text>
-              <br />
-              <Text type="secondary" style={{ fontSize: 12 }}>
-                여러 개의 파일을 한 번에 업로드할 수 있습니다.
-              </Text>
-            </Upload.Dragger>
-            <Button
-              type="primary"
-              size="large"
-              block
-              disabled={files.length === 0}
-              style={{ marginTop: 16, borderRadius: 8 }}
-              onClick={handleUpload}
-            >
-              암호화 시작
-            </Button>
-          </Space>
-        </Col>
-      </Row>
-    </div>
+        <TypeDescription />
+
+        <FileUploadDragger
+          files={files}
+          handleAddFile={handleAddFile}
+          handleDeleteFile={handleDeleteFile}
+        />
+
+        <UploadButton
+          disabled={files.length === 0}
+          handleUpload={handleUpload}
+        />
+      </Space>
+    </EncryptLayout>
   );
 }
 
