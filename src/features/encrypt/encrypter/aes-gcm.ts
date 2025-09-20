@@ -50,7 +50,14 @@ class AESEncrypter {
     combined.set(iv, salt.length);
     combined.set(new Uint8Array(encrypted), salt.length + iv.length);
 
-    return btoa(String.fromCharCode(...combined));
+    // 큰 배열을 청크로 나누어서 처리
+    const chunkSize = 8192;
+    let binaryString = "";
+    for (let i = 0; i < combined.length; i += chunkSize) {
+      const chunk = combined.slice(i, i + chunkSize);
+      binaryString += String.fromCharCode(...chunk);
+    }
+    return btoa(binaryString);
   }
 
   // 복호화
