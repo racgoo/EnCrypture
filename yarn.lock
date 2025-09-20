@@ -684,6 +684,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@noble/hashes@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@noble/hashes@npm:2.0.0"
+  checksum: 10c0/4c619df392164ea8655c630e753e791e1afb5f38cb746463d36509f684a197c3c653858b6a78135a0b54c80270a66f28003d5999ec1ad06cec0d658bf720a03f
+  languageName: node
+  linkType: hard
+
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -1012,13 +1019,6 @@ __metadata:
   version: 4.50.1
   resolution: "@rollup/rollup-win32-x64-msvc@npm:4.50.1"
   conditions: os=win32 & cpu=x64
-  languageName: node
-  linkType: hard
-
-"@types/argon2-browser@npm:^1":
-  version: 1.18.4
-  resolution: "@types/argon2-browser@npm:1.18.4"
-  checksum: 10c0/c82d6cf18042594eda4f563f9998195eaba461210f43133c5df02bc9a15bf28b2b5421e404a6627c4cd8aa89af721496b82fbbbe562ace532e44a4cbf766b2c4
   languageName: node
   linkType: hard
 
@@ -1390,13 +1390,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"argon2-browser@npm:^1.18.0":
-  version: 1.18.0
-  resolution: "argon2-browser@npm:1.18.0"
-  checksum: 10c0/da58d39e6fd2be58cf0f7ee3fe6e3d88bfdf4c923f00ae0cce9d9431ea8661b8bc1c62326e7cf6b33872e2f3e8d1bb0816842f8e05d97141b859351fd5a80ca4
-  languageName: node
-  linkType: hard
-
 "argparse@npm:^2.0.1":
   version: 2.0.1
   resolution: "argparse@npm:2.0.1"
@@ -1660,12 +1653,11 @@ __metadata:
   resolution: "encrypture@workspace:."
   dependencies:
     "@eslint/js": "npm:^9.33.0"
-    "@types/argon2-browser": "npm:^1"
+    "@noble/hashes": "npm:^2.0.0"
     "@types/react": "npm:^18"
     "@types/react-dom": "npm:^18"
     "@vitejs/plugin-react": "npm:^5.0.0"
     antd: "npm:^5.27.3"
-    argon2-browser: "npm:^1.18.0"
     eslint: "npm:^9.33.0"
     eslint-plugin-barrel-rules: "npm:^1.2.0"
     eslint-plugin-react-hooks: "npm:^5.2.0"
