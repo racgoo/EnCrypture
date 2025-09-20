@@ -17,7 +17,7 @@ import {
 } from "antd";
 import type { RcFile } from "antd/es/upload";
 import { useCallback, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useType } from "./hooks/useType";
 
 const { Title, Text } = Typography;
 
@@ -25,39 +25,42 @@ const MEGABYTE_SIZE = 1024 * 1024;
 const MAX_FILE_SIZE = 100 * MEGABYTE_SIZE;
 const MAX_FILE_SIZE_STRING = "100MB";
 
-type EncryptionType = "client" | "server";
-
 function EncryptPage() {
-  const { type = "client" } = useParams<{ type: EncryptionType }>();
-  const navigate = useNavigate();
+  const { type, changeType } = useType();
 
-  const [fileList, setFileList] = useState<RcFile[]>([]);
+  const [files, setFiles] = useState<RcFile[]>([]);
 
-  const handleTypeChange = (e: RadioChangeEvent) => {
-    const targetType = e.target.value;
-    navigate(`/encrypt/${targetType}`);
-  };
+  const handleTypeChange = useCallback(
+    (e: RadioChangeEvent) => {
+      const targetType = e.target.value;
+      changeType(targetType);
+    },
+    [changeType]
+  );
 
-  const beforeUpload = (file: RcFile) => {
-    const nextFiles = [...fileList, file];
+  const beforeUpload = useCallback(
+    (file: RcFile) => {
+      const nextFiles = [...files, file];
 
-    const totalSize = nextFiles.reduce((totalSize, file) => {
-      totalSize += file.size ?? 0;
-      return totalSize;
-    }, 0);
+      const totalSize = nextFiles.reduce((totalSize, file) => {
+        totalSize += file.size ?? 0;
+        return totalSize;
+      }, 0);
 
-    if (totalSize <= MAX_FILE_SIZE) {
-      setFileList(nextFiles);
-      return file;
-    }
+      if (totalSize <= MAX_FILE_SIZE) {
+        setFiles(nextFiles);
+        return file;
+      }
 
-    message.error("100MB를 초과하는 파일은 업로드할 수 없습니다.");
-    return Upload.LIST_IGNORE;
-  };
+      message.error("100MB를 초과하는 파일은 업로드할 수 없습니다.");
+      return Upload.LIST_IGNORE;
+    },
+    [files]
+  );
 
   const handleUpload = useCallback(() => {
     message.info("암호화 기능은 곧 제공됩니다!");
-  }, [fileList]);
+  }, [files]);
 
   return (
     <div>
@@ -129,7 +132,7 @@ function EncryptPage() {
 
               <Upload.Dragger
                 multiple
-                fileList={fileList}
+                fileList={files}
                 beforeUpload={beforeUpload}
                 accept="*"
                 style={{
@@ -152,7 +155,7 @@ function EncryptPage() {
                 type="primary"
                 size="large"
                 block
-                disabled={fileList.length === 0}
+                disabled={files.length === 0}
                 style={{ marginTop: 16, borderRadius: 8 }}
                 onClick={handleUpload}
               >
