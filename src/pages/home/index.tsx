@@ -30,7 +30,7 @@ const options = [
       <Tag color="success">100% 오프라인</Tag>,
       <Tag color="processing">빠른 변환</Tag>,
     ],
-    href: "/client-encrypt",
+    href: "/encrypt/client",
     disabled: false,
   },
   {
@@ -47,7 +47,7 @@ const options = [
       <Tag color="warning">인터넷 필요</Tag>,
       <Tag color="default">고급 기능</Tag>,
     ],
-    href: "/server-encrypt",
+    href: "/encrypt/server",
     disabled: true,
   },
 ];
