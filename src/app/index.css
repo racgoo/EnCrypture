@@ -1,5 +1,14 @@
+@font-face {
+  font-family: "Moneygraphy-Pixel";
+  src: url("/font/Moneygraphy-Pixel.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 * {
   box-sizing: border-box;
+  font-family: "Moneygraphy-Pixel", sans-serif;
 }
 
 html,
