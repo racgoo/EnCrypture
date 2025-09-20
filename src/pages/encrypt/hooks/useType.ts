@@ -7,7 +7,9 @@ function useType() {
   const navigate = useNavigate();
 
   const changeType = (targetType: EncryptionType) => {
-    navigate(`/encrypt/${targetType}`);
+    navigate(`/encrypt/${targetType}`, {
+      replace: true,
+    });
   };
 
   return { type, changeType };
