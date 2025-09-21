@@ -1,36 +1,21 @@
-import { useState } from "react";
-import { LockOutlined, FileTextOutlined } from "@ant-design/icons";
-import { Button, Input, Typography, Upload, message, Card, Space } from "antd";
+import { FileTextOutlined, LockOutlined } from "@ant-design/icons";
+import { Space, Typography } from "antd";
+import { DecryptButton } from "./components/DecryptButton";
+import { DecryptCard } from "./components/DecryptCard";
+import { DecryptLayout } from "./components/DecryptLayout";
+import { PasswordInput } from "./components/PasswordInput";
+import { useDecrypt } from "./hooks/useDecrypt";
 
 const { Title, Paragraph } = Typography;
 
 function DecryptPage() {
-  const [password, setPassword] = useState("");
-  const [decryptedContent, setDecryptedContent] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const { password, setPassword, files, decrypt, loading } = useDecrypt([], []);
 
   const handleDecrypt = async () => {};
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#242424",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        paddingTop: 64,
-      }}
-    >
-      <Card
-        style={{
-          width: 420,
-          maxWidth: "90vw",
-          background: "#1a1a1a",
-          borderRadius: 16,
-          boxShadow: "0 4px 24px #0008",
-        }}
-      >
+    <DecryptLayout>
+      <DecryptCard>
         <Space direction="vertical" size="large" style={{ width: "100%" }}>
           <div style={{ textAlign: "center" }}>
             <LockOutlined style={{ fontSize: 48, color: "#1677ff" }} />
@@ -44,44 +29,12 @@ function DecryptPage() {
             </Paragraph>
           </div>
 
-          <Input.Password
-            size="large"
-            placeholder="암호를 입력하세요"
-            prefix={<LockOutlined />}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{ background: "#222", color: "#fff" }}
-          />
-          <Button
-            type="primary"
-            size="large"
-            block
-            loading={loading}
-            onClick={handleDecrypt}
-            disabled={!password}
-            style={{ marginTop: 8 }}
-          >
-            복호화하기
-          </Button>
-          {decryptedContent && (
-            <Card
-              style={{
-                marginTop: 16,
-                background: "#181818",
-                color: "#fff",
-                whiteSpace: "pre-wrap",
-                maxHeight: 240,
-                overflowY: "auto",
-              }}
-              title="복호화 결과"
-              size="small"
-            >
-              {decryptedContent}
-            </Card>
-          )}
+          <PasswordInput password={password} setPassword={setPassword} />
+
+          <DecryptButton handleDecrypt={handleDecrypt} />
         </Space>
-      </Card>
-    </div>
+      </DecryptCard>
+    </DecryptLayout>
   );
 }
 
