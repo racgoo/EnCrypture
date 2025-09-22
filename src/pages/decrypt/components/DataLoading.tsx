@@ -16,10 +16,7 @@ function DataLoading({ percentage }: DataLoadingProps) {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        background: "rgba(20, 20, 30, 0.85)",
-        borderRadius: 12,
-        padding: "48px 0 32px 0",
-        marginBottom: 24,
+        background: "transparent",
       }}
     >
       <div style={{ marginBottom: 24 }}>
