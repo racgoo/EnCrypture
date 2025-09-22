@@ -24,7 +24,11 @@ function EncryptPage() {
         size="large"
         style={{ width: "100%", maxWidth: 600 }}
       >
-        <Title level={2} style={{ textAlign: "center", marginBottom: 0 }}>
+        <Title
+          level={2}
+          style={{ textAlign: "center", marginBottom: 0 }}
+          onClick={() => {}}
+        >
           파일 암호화
         </Title>
 
