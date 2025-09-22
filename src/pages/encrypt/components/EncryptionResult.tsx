@@ -1,12 +1,28 @@
+import { downloadHtml } from "@features/file";
+import { getRedirectionHtmlTemplete } from "@shares/templete";
 import { Progress, Typography } from "antd";
+import { useCallback } from "react";
+
 const { Text } = Typography;
 
 interface EncryptionResultProps {
   message: string;
   percentage: number;
+  finished: boolean;
+  encryptedFiles: string[];
 }
 
-function EncryptionResult({ message, percentage }: EncryptionResultProps) {
+function EncryptionResult({
+  message,
+  percentage,
+  finished,
+  encryptedFiles,
+}: EncryptionResultProps) {
+  const handleDownloadEncryptedHtml = useCallback(() => {
+    const redirectionHtmlTemplete = getRedirectionHtmlTemplete(encryptedFiles);
+    downloadHtml(redirectionHtmlTemplete);
+  }, [encryptedFiles]);
+
   return (
     <div
       style={{
@@ -17,9 +33,17 @@ function EncryptionResult({ message, percentage }: EncryptionResultProps) {
         display: message ? "block" : "none",
       }}
     >
-      <Text>결과</Text>
       {percentage > 0 && <Progress percent={percentage} />}
       {message && <Text>{message}</Text>}
+      {finished && (
+        <Text>
+          <div style={{ marginTop: 12 }}>
+            <button type="button" onClick={handleDownloadEncryptedHtml}>
+              복호화 페이지 다운로드
+            </button>
+          </div>
+        </Text>
+      )}
     </div>
   );
 }

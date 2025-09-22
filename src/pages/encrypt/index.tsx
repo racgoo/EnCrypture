@@ -12,10 +12,13 @@ import { MAX_FILE_SIZE_STRING } from "./constants";
 import { useEncrypt } from "./hooks/useEncrypt";
 import { useFile } from "./hooks/useFile";
 import { usePassword } from "./hooks/usePassword";
+import { flushSync } from "react-dom";
+import { useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
 
 function EncryptPage() {
+  const navigate = useNavigate();
   const { setMetadata } = useMetadataRepository();
   const { files, handleAddFile, handleDeleteFile } = useFile();
   const { password, setPassword, error, valid } = usePassword();
@@ -24,15 +27,24 @@ function EncryptPage() {
     password,
   });
   const [encryptLoading, setEncryptLoading] = useState(false);
+  const [encryptFinished, setEncryptFinished] = useState(false);
+  const [encryptedFiles, setEncryptedFiles] = useState<string[]>([]);
 
   const handleEncrypt = useCallback(async () => {
-    setEncryptLoading(true);
+    flushSync(() => {
+      setEncryptLoading(true);
+      setEncryptFinished(false);
+    });
     const fileNames = files.map((file) => file.name);
     const encryptedFiles = await encrypt();
+    setEncryptedFiles(encryptedFiles);
     fileNames.forEach((fileName, index) => {
       setMetadata(fileName, encryptedFiles[index]);
     });
-    setEncryptLoading(false);
+    flushSync(() => {
+      setEncryptLoading(false);
+      setEncryptFinished(true);
+    });
   }, [encrypt, files, setMetadata]);
 
   const buttonDisabled = useMemo(
@@ -50,7 +62,9 @@ function EncryptPage() {
         <Title
           level={2}
           style={{ textAlign: "center", marginBottom: 0 }}
-          onClick={() => {}}
+          onClick={() => {
+            navigate("/decrypt");
+          }}
         >
           파일 암호화
         </Title>
@@ -82,7 +96,12 @@ function EncryptPage() {
           placeholder="영문, 숫자, 특수문자 포함 6자 이상"
         />
 
-        <EncryptionResult message={message} percentage={percentage} />
+        <EncryptionResult
+          message={message}
+          percentage={percentage}
+          finished={encryptFinished}
+          encryptedFiles={encryptedFiles}
+        />
 
         <EncryptButton
           disabled={buttonDisabled}
