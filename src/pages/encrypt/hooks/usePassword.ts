@@ -22,7 +22,11 @@ function usePassword() {
     return null;
   }, [password]);
 
-  return { password, setPassword, error };
+  const valid = useMemo(() => {
+    return error === null && password.length > 0;
+  }, [error, password]);
+
+  return { password, setPassword, error, valid };
 }
 
 export { usePassword };

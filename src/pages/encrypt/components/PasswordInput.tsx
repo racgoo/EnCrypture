@@ -7,6 +7,7 @@ interface PasswordInputProps {
   setPassword: (password: string) => void;
   error: string | null;
   placeholder: string;
+  disabled: boolean;
 }
 
 function PasswordInput({
@@ -14,10 +15,12 @@ function PasswordInput({
   setPassword,
   error,
   placeholder,
+  disabled,
 }: PasswordInputProps) {
   return (
     <Fragment>
       <Input.Password
+        disabled={disabled}
         size="large"
         placeholder={placeholder}
         prefix={<LockOutlined />}

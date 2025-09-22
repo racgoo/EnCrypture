@@ -12,7 +12,7 @@ function EncryptButton({ disabled, handleEncrypt }: EncryptButtonProps) {
       size="large"
       block
       disabled={disabled}
-      style={{ marginTop: 16, borderRadius: 8 }}
+      style={{ marginTop: 16, borderRadius: 8, opacity: disabled ? 0.5 : 1 }}
       onClick={handleEncrypt}
     >
       암호화 시작
