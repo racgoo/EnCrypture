@@ -1,11 +1,11 @@
 import { Button } from "antd";
 
-interface UploadButtonProps {
-  handleUpload: () => void;
+interface EncryptButtonProps {
+  handleEncrypt: () => void;
   disabled: boolean;
 }
 
-function UploadButton({ disabled, handleUpload }: UploadButtonProps) {
+function EncryptButton({ disabled, handleEncrypt }: EncryptButtonProps) {
   return (
     <Button
       type="primary"
@@ -13,11 +13,11 @@ function UploadButton({ disabled, handleUpload }: UploadButtonProps) {
       block
       disabled={disabled}
       style={{ marginTop: 16, borderRadius: 8 }}
-      onClick={handleUpload}
+      onClick={handleEncrypt}
     >
       암호화 시작
     </Button>
   );
 }
 
-export { UploadButton };
+export { EncryptButton };

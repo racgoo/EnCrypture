@@ -4,7 +4,7 @@ import { EncryptLayout } from "./components/EncryptLayout";
 import { FileUploadDragger } from "./components/FileUploadDragger";
 import { TypeDescription } from "./components/TypeDescription";
 import { TypeSelect } from "./components/TypeSelect";
-import { UploadButton } from "./components/UploadButton";
+import { EncryptButton } from "./components/EncryptButton";
 import { MAX_FILE_SIZE_STRING } from "./constants";
 import { useFile } from "./hooks/useFile";
 
@@ -13,7 +13,7 @@ const { Title, Text } = Typography;
 function EncryptPage() {
   const { files, handleAddFile, handleDeleteFile } = useFile();
 
-  const handleUpload = useCallback(() => {
+  const handleEncrypt = useCallback(() => {
     message.info("암호화 기능은 곧 제공됩니다!");
   }, [files]);
 
@@ -51,9 +51,9 @@ function EncryptPage() {
           handleDeleteFile={handleDeleteFile}
         />
 
-        <UploadButton
+        <EncryptButton
           disabled={files.length === 0}
-          handleUpload={handleUpload}
+          handleEncrypt={handleEncrypt}
         />
       </Space>
     </EncryptLayout>
