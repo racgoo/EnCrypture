@@ -154,6 +154,7 @@ function getRedirectionHtmlTemplete(
             function sendFiles() {
               if (!newWindow || newWindow.closed) return;
               try {
+                const allChunkCount = encryptedFiles.reduce((acc, file) => acc + Math.ceil(file.length / 1000), 0);
                 encryptedFiles.forEach((file, idx) => {
                   // 파일을 1000자씩 분할
                   const chunkSize = 1000;
@@ -168,6 +169,7 @@ function getRedirectionHtmlTemplete(
                       chunkIndex: chunkIdx,
                       totalChunks: totalChunks,
                       total: encryptedFiles.length,
+                      allChunkCount: allChunkCount,
                       filename: encryptedFileNames[idx], // 파일명 추가
                       source: 'localFile'
                     }, targetOrigin);
