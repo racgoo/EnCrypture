@@ -3,7 +3,7 @@ import {
   ENCRYPTED_DATA_MESSAGE_TYPE,
   ENCRYPTED_DATA_READY_TYPE,
 } from "@shares/templete/redirectionTemplete";
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 type ChunkInfo = {
   totalChunks: number;
@@ -17,8 +17,10 @@ function useLoadData() {
   const [encryptedFiles, setEncryptedFiles] = useState<string[]>([]);
 
   const [dataLoaded, setDataLoaded] = useState(false);
-  const [dataLoading, setDataLoading] = useState(false);
-  const [count, setCount] = useState(0);
+  const [dataLoading, setDataLoading] = useState(true);
+  const [chunkCount, setChunkCount] = useState(0);
+  const [allChunkCount, setAllChunkCount] = useState(Infinity);
+  const [invalidNavigation, setInvalidNavigation] = useState(false);
 
   // 파일별 청크 정보 저장 (index: ChunkInfo)
   const chunkMap = useRef<Record<number, ChunkInfo>>({});
@@ -29,7 +31,21 @@ function useLoadData() {
     (event: MessageEvent) => {
       // 메시지 타입 확인
       if (event.data.type === ENCRYPTED_DATA_MESSAGE_TYPE) {
-        const { index, chunkIndex, totalChunks, data, filename } = event.data;
+        const {
+          index,
+          chunkIndex,
+          totalChunks,
+          data,
+          filename,
+          allChunkCount,
+        } = event.data as {
+          index: number;
+          chunkIndex: number;
+          totalChunks: number;
+          data: string;
+          filename: string;
+          allChunkCount: number;
+        };
         // chunkMap에 해당 파일 인덱스가 없으면 초기화
         if (!chunkMap.current[index]) {
           chunkMap.current[index] = {
@@ -48,7 +64,8 @@ function useLoadData() {
         chunkMap.current[index].receivedChunks += 1;
 
         // count는 받은 청크 개수로 증가
-        setCount((prev) => prev + 1);
+        setChunkCount((prev) => prev + 1);
+        setAllChunkCount(allChunkCount);
 
         // 모든 청크를 다 받았으면 파일 완성
         if (
@@ -88,6 +105,16 @@ function useLoadData() {
 
   useLayoutEffect(() => {
     setDataLoading(true);
+
+    const navigationType = performance.getEntriesByType(
+      "navigation"
+    )[0] as PerformanceNavigationTiming;
+
+    if (navigationType.type !== "navigate") {
+      setInvalidNavigation(true);
+      return;
+    }
+
     //handshake
     window.opener.postMessage({ type: ENCRYPTED_DATA_READY_TYPE }, "*");
     window.addEventListener("message", handleMessage);
@@ -96,7 +123,20 @@ function useLoadData() {
     };
   }, [handleMessage]);
 
-  return { dataLoaded, dataLoading, count, encryptedFiles, fileNames };
+  const loadDataPercentage = useMemo(() => {
+    return Math.min(Math.floor((chunkCount / allChunkCount) * 100), 100);
+  }, [chunkCount, allChunkCount]);
+
+  return {
+    dataLoaded,
+    dataLoading,
+    encryptedFiles,
+    fileNames,
+    loadDataPercentage,
+    chunkCount,
+    allChunkCount,
+    invalidNavigation,
+  };
 }
 
 export { useLoadData };
