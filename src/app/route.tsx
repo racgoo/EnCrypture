@@ -22,6 +22,6 @@ const router = createHashRouter([
   },
 ]);
 
-export function RoutesProvider() {
+export function AppRoutes() {
   return <RouterProvider router={router} />;
 }

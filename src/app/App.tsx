@@ -1,11 +1,14 @@
-import AntdProvider from "./provider/antd/antd.provider";
-import { RoutesProvider } from "./provider/route/route.provider";
+import { MetaDataProvider } from "@shares/provider/metadata/metadata.provider";
+import AntdProvider from "../shares/provider/antd/antd.provider";
+import { AppRoutes } from "./route";
 
 function App() {
   return (
-    <AntdProvider>
-      <RoutesProvider />
-    </AntdProvider>
+    <MetaDataProvider>
+      <AntdProvider>
+        <AppRoutes />
+      </AntdProvider>
+    </MetaDataProvider>
   );
 }
 
