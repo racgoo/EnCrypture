@@ -6,7 +6,11 @@ interface DataLoadingProps {
   allChunkCount: number;
 }
 
-function DataLoading({ percentage }: DataLoadingProps) {
+function DataLoading({
+  percentage,
+  chunkCount,
+  allChunkCount,
+}: DataLoadingProps) {
   return (
     <div
       style={{
@@ -46,7 +50,7 @@ function DataLoading({ percentage }: DataLoadingProps) {
           </style>
         </svg>
         <div style={{ color: "#fff", fontWeight: 700, fontSize: 20 }}>
-          데이터 로드중...
+          데이터 로드중...({chunkCount}/{allChunkCount})
         </div>
         <div style={{ color: "#aaa", fontSize: 14, marginTop: 4 }}>
           암호화된 파일을 안전하게 불러오고 있습니다.

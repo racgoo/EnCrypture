@@ -1,5 +1,5 @@
 import { FileTextOutlined, LockOutlined } from "@ant-design/icons";
-import { message, Space, Typography } from "antd";
+import { message, Progress, Space, Typography } from "antd";
 import { Fragment, useMemo } from "react";
 import { DataLoading } from "./components/DataLoading";
 import { DecryptButton } from "./components/DecryptButton";
@@ -10,40 +10,41 @@ import { PasswordInput } from "./components/PasswordInput";
 import { useDecrypt } from "./hooks/useDecrypt";
 import { useLoadData } from "./hooks/useLoadData";
 
-const { Title, Paragraph } = Typography;
+const { Title, Paragraph, Text } = Typography;
 
 function DecryptPage() {
   const {
     dataLoaded,
     dataLoading,
-    percentage,
+    loadDataPercentage,
     encryptedFiles,
     fileNames,
     chunkCount,
     allChunkCount,
     invalidNavigation,
   } = useLoadData();
-  const { password, setPassword, decrypt, files } = useDecrypt(
-    encryptedFiles,
-    fileNames
-  );
+  const {
+    password,
+    setPassword,
+    decrypt,
+    files,
+    decryptLoading,
+    decryptPercentage,
+  } = useDecrypt(encryptedFiles, fileNames);
 
-  const handleDecrypt = async () => {
-    try {
-      await decrypt();
-    } catch {
-      message.error("파일 복호화에 실패했습니다.");
-    }
+  const handleDecrypt = () => {
+    decrypt();
   };
 
   const inputLoading = useMemo(() => {
-    return dataLoading || !dataLoaded;
-  }, [dataLoading, dataLoaded]);
+    return dataLoading || !dataLoaded || decryptLoading;
+  }, [dataLoading, dataLoaded, decryptLoading]);
 
   const successDecrypt = useMemo(() => {
     return files.length > 0 && !inputLoading;
   }, [files, inputLoading]);
 
+  console.log(files);
   return (
     <DecryptLayout>
       <DecryptCard>
@@ -57,7 +58,7 @@ function DecryptPage() {
 
         {!invalidNavigation && dataLoading && (
           <DataLoading
-            percentage={percentage}
+            percentage={loadDataPercentage}
             chunkCount={chunkCount}
             allChunkCount={allChunkCount}
           />
@@ -84,6 +85,11 @@ function DecryptPage() {
                   setPassword={setPassword}
                   disabled={inputLoading}
                 />
+
+                <div>
+                  <Text> 진행률{decryptPercentage}</Text>
+                  <Progress percent={decryptPercentage} />
+                </div>
 
                 <DecryptButton
                   handleDecrypt={handleDecrypt}

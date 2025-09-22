@@ -123,7 +123,7 @@ function useLoadData() {
     };
   }, [handleMessage]);
 
-  const percentage = useMemo(() => {
+  const loadDataPercentage = useMemo(() => {
     return Math.min(Math.floor((chunkCount / allChunkCount) * 100), 100);
   }, [chunkCount, allChunkCount]);
 
@@ -132,7 +132,7 @@ function useLoadData() {
     dataLoading,
     encryptedFiles,
     fileNames,
-    percentage,
+    loadDataPercentage,
     chunkCount,
     allChunkCount,
     invalidNavigation,
