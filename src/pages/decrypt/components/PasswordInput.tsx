@@ -4,11 +4,17 @@ import { LockOutlined } from "@ant-design/icons";
 interface PasswordInputProps {
   password: string;
   setPassword: (password: string) => void;
+  disabled: boolean;
 }
 
-function PasswordInput({ password, setPassword }: PasswordInputProps) {
+function PasswordInput({
+  password,
+  setPassword,
+  disabled,
+}: PasswordInputProps) {
   return (
     <Input.Password
+      disabled={disabled}
       size="large"
       placeholder="암호를 입력하세요"
       prefix={<LockOutlined />}

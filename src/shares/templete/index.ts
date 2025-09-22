@@ -1,0 +1,1 @@
+export { getRedirectionHtmlTemplete } from "./redirectionTemplete";

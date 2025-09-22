@@ -4,7 +4,7 @@ function DecryptCard({ children }: { children: React.ReactNode }) {
   return (
     <Card
       style={{
-        width: 420,
+        minWidth: 420,
         maxWidth: "90vw",
         background: "#1a1a1a",
         borderRadius: 16,

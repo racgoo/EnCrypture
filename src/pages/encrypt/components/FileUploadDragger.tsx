@@ -9,12 +9,14 @@ interface FileUploadDraggerProps {
   files: RcFile[];
   handleAddFile: (file: RcFile) => RcFile | string;
   handleDeleteFile: (file: RcFile) => void;
+  disabled: boolean;
 }
 
 function FileUploadDragger({
   files,
   handleAddFile,
   handleDeleteFile,
+  disabled,
 }: FileUploadDraggerProps) {
   const handleChange = useCallback(
     (info: UploadChangeParam<UploadFile>) => {
@@ -29,6 +31,7 @@ function FileUploadDragger({
   return (
     <Upload.Dragger
       // multiple
+      disabled={disabled}
       fileList={files}
       beforeUpload={handleAddFile}
       onChange={handleChange}

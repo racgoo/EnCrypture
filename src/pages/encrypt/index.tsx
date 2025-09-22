@@ -1,21 +1,53 @@
-import { message, Space, Typography } from "antd";
-import { useCallback } from "react";
+import { Space, Typography } from "antd";
+import { useCallback, useMemo, useState } from "react";
+import { flushSync } from "react-dom";
+import { useNavigate } from "react-router-dom";
+import { EncryptButton } from "./components/EncryptButton";
+import { EncryptionResult } from "./components/EncryptionResult";
 import { EncryptLayout } from "./components/EncryptLayout";
 import { FileUploadDragger } from "./components/FileUploadDragger";
+import { PasswordInput } from "./components/PasswordInput";
 import { TypeDescription } from "./components/TypeDescription";
 import { TypeSelect } from "./components/TypeSelect";
-import { UploadButton } from "./components/UploadButton";
 import { MAX_FILE_SIZE_STRING } from "./constants";
+import { useEncrypt } from "./hooks/useEncrypt";
 import { useFile } from "./hooks/useFile";
+import { usePassword } from "./hooks/usePassword";
 
 const { Title, Text } = Typography;
 
 function EncryptPage() {
+  const navigate = useNavigate();
   const { files, handleAddFile, handleDeleteFile } = useFile();
+  const { password, setPassword, error, valid } = usePassword();
+  const { encrypt, percentage, message } = useEncrypt({
+    files,
+    password,
+  });
+  const [encryptLoading, setEncryptLoading] = useState(false);
+  const [encryptFinished, setEncryptFinished] = useState(false);
+  const [encryptedFiles, setEncryptedFiles] = useState<string[]>([]);
+  const [encryptedFileNames, setEncryptedFileNames] = useState<string[]>([]);
 
-  const handleUpload = useCallback(() => {
-    message.info("암호화 기능은 곧 제공됩니다!");
-  }, [files]);
+  const handleEncrypt = useCallback(async () => {
+    flushSync(() => {
+      setEncryptLoading(true);
+      setEncryptFinished(false);
+    });
+    const fileNames = files.map((file) => file.name);
+    const encryptedFiles = await encrypt();
+    flushSync(() => {
+      setEncryptedFiles(encryptedFiles);
+      setEncryptedFileNames(fileNames);
+      setEncryptLoading(false);
+      setEncryptFinished(true);
+    });
+  }, [encrypt, files]);
+
+  const buttonDisabled = useMemo(
+    () => files.length === 0 || valid === false || encryptLoading,
+    [files, valid, encryptLoading]
+  );
 
   return (
     <EncryptLayout>
@@ -27,11 +59,12 @@ function EncryptPage() {
         <Title
           level={2}
           style={{ textAlign: "center", marginBottom: 0 }}
-          onClick={() => {}}
+          onClick={() => {
+            navigate("/decrypt");
+          }}
         >
           파일 암호화
         </Title>
-
         <Text
           type="secondary"
           style={{ textAlign: "center", display: "block" }}
@@ -46,14 +79,31 @@ function EncryptPage() {
         <TypeDescription />
 
         <FileUploadDragger
+          disabled={encryptLoading}
           files={files}
           handleAddFile={handleAddFile}
           handleDeleteFile={handleDeleteFile}
         />
 
-        <UploadButton
-          disabled={files.length === 0}
-          handleUpload={handleUpload}
+        <PasswordInput
+          disabled={encryptLoading}
+          password={password}
+          setPassword={setPassword}
+          error={error}
+          placeholder="영문, 숫자, 특수문자 포함 6자 이상"
+        />
+
+        <EncryptionResult
+          message={message}
+          percentage={percentage}
+          finished={encryptFinished}
+          encryptedFileNames={encryptedFileNames}
+          encryptedFiles={encryptedFiles}
+        />
+
+        <EncryptButton
+          disabled={buttonDisabled}
+          handleEncrypt={handleEncrypt}
         />
       </Space>
     </EncryptLayout>

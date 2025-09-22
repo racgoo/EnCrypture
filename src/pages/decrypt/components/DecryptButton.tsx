@@ -2,10 +2,11 @@ import { Button } from "antd";
 import { useCallback, useState } from "react";
 
 interface DecryptButtonProps {
+  disabled: boolean;
   handleDecrypt: () => void;
 }
 
-function DecryptButton({ handleDecrypt }: DecryptButtonProps) {
+function DecryptButton({ handleDecrypt, disabled }: DecryptButtonProps) {
   const [loading, setLoading] = useState(false);
 
   const handleClick = useCallback(() => {
@@ -18,6 +19,7 @@ function DecryptButton({ handleDecrypt }: DecryptButtonProps) {
     <Button
       type="primary"
       size="large"
+      disabled={disabled}
       block
       loading={loading}
       onClick={handleClick}
