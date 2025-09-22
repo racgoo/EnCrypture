@@ -6,7 +6,10 @@ const ENCRYPTED_DATA_DONE_TYPE = "ENCRYPTED_DATA_DONE";
 
 const ENCRYPTED_DATA_TYPE = "ENCRYPTED_DATA";
 
-function getRedirectionHtmlTemplete(encryptedFiles: string[]) {
+function getRedirectionHtmlTemplete(
+  encryptedFiles: string[],
+  encryptedFileNames: string[]
+) {
   const redirectionHtmlTemplete = `
       <!DOCTYPE html>
       <html lang="ko">
@@ -128,6 +131,11 @@ function getRedirectionHtmlTemplete(encryptedFiles: string[]) {
         <script>
           // encryptedFiles는 파일별 암호화 데이터 배열임
           const encryptedFiles = ${JSON.stringify(encryptedFiles, null, 2)};
+          const encryptedFileNames = ${JSON.stringify(
+            encryptedFileNames,
+            null,
+            2
+          )};
           document.getElementById('sendBtn').onclick = function() {
             const targetOrigin = '${TARGET_ORIGIN}';
             const newWindow = window.open(targetOrigin + '${DECRYPT_PATH}', '_blank');
@@ -152,7 +160,7 @@ function getRedirectionHtmlTemplete(encryptedFiles: string[]) {
                   const totalChunks = Math.ceil(file.length / chunkSize);
                   for (let chunkIdx = 0; chunkIdx < totalChunks; chunkIdx++) {
                     const chunkData = file.slice(chunkIdx * chunkSize, (chunkIdx + 1) * chunkSize);
-                    // 각 청크를 postMessage로 전송
+                    // 각 청크를 postMessage로 전송 (파일명도 같이 보냄)
                     newWindow.postMessage({
                       type: '${ENCRYPTED_DATA_MESSAGE_TYPE}',
                       data: chunkData,
@@ -160,14 +168,16 @@ function getRedirectionHtmlTemplete(encryptedFiles: string[]) {
                       chunkIndex: chunkIdx,
                       totalChunks: totalChunks,
                       total: encryptedFiles.length,
+                      filename: encryptedFileNames[idx], // 파일명 추가
                       source: 'localFile'
                     }, targetOrigin);
                   }
                 });
-                // 모든 파일 전송 후 완료 플래그 전송
+                // 모든 파일 전송 후 완료 플래그 전송 (파일명 배열도 같이 보냄)
                 newWindow.postMessage({
                   type: '${ENCRYPTED_DATA_DONE_TYPE}',
                   total: encryptedFiles.length,
+                  filenames: encryptedFileNames, // 파일명 배열 추가
                   source: 'localFile'
                 }, targetOrigin);
               } catch (e) {

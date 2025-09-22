@@ -1,46 +1,34 @@
 import { FileTextOutlined, LockOutlined } from "@ant-design/icons";
 import { message, Space, Typography } from "antd";
+import { useMemo } from "react";
 import { DecryptButton } from "./components/DecryptButton";
 import { DecryptCard } from "./components/DecryptCard";
 import { DecryptLayout } from "./components/DecryptLayout";
 import { PasswordInput } from "./components/PasswordInput";
 import { useDecrypt } from "./hooks/useDecrypt";
 import { useLoadData } from "./hooks/useLoadData";
-import { useMetadataRepository } from "@features/repository";
-import { ENCRYPTED_DATA_TYPE } from "@shares/templete/redirectionTemplete";
-import { aesEncrypter, argon2Encrypter } from "@features/encrypt";
-import { useState } from "react";
-import { getFileFromBase64 } from "@features/file";
 
 const { Title, Paragraph, Text } = Typography;
 
 function DecryptPage() {
-  const { getMetadata } = useMetadataRepository();
-  const { dataLoaded, dataLoading, count } = useLoadData();
-  const { password, setPassword, files, decrypt, loading } = useDecrypt([], []);
-  const [decryptedFiles, setDecryptedFiles] = useState<File[]>([]);
+  const { dataLoaded, dataLoading, count, encryptedFiles, fileNames } =
+    useLoadData();
+  const { password, setPassword, decrypt, files } = useDecrypt(
+    encryptedFiles,
+    fileNames
+  );
 
   const handleDecrypt = async () => {
-    const encryptKey = await argon2Encrypter.hash(password);
-    const encryptedDatas = getMetadata(ENCRYPTED_DATA_TYPE)?.split(",");
     try {
-      if (encryptedDatas) {
-        const decryptedFiles = await Promise.all(
-          encryptedDatas.map(async (encryptedBase64File, index) => {
-            const decryptedFile = await aesEncrypter.decrypt(
-              encryptedBase64File,
-              encryptKey
-            );
-            return getFileFromBase64(decryptedFile, "hihi," + index);
-          })
-        );
-        console.log(decryptedFiles);
-        setDecryptedFiles(decryptedFiles);
-      }
+      await decrypt();
     } catch {
       message.error("파일 복호화에 실패했습니다.");
     }
   };
+
+  const inputLoading = useMemo(() => {
+    return dataLoading || !dataLoaded;
+  }, [dataLoading, dataLoaded]);
 
   return (
     <DecryptLayout>
@@ -48,13 +36,7 @@ function DecryptPage() {
         <Space direction="vertical" size="large" style={{ width: "100%" }}>
           <div style={{ textAlign: "center" }}>
             <LockOutlined style={{ fontSize: 48, color: "#1677ff" }} />
-            <Title
-              level={2}
-              style={{ color: "#fff", marginTop: 16 }}
-              onClick={() => {
-                console.log(getMetadata(ENCRYPTED_DATA_TYPE));
-              }}
-            >
+            <Title level={2} style={{ color: "#fff", marginTop: 16 }}>
               파일 복호화{count}
             </Title>
             <Paragraph style={{ color: "#aaa" }}>
@@ -64,15 +46,19 @@ function DecryptPage() {
             </Paragraph>
           </div>
 
-          <PasswordInput password={password} setPassword={setPassword} />
+          <PasswordInput
+            password={password}
+            setPassword={setPassword}
+            disabled={inputLoading}
+          />
 
           {/* 복호화된 파일 리스트 및 다운로드 버튼 표시 */}
-          {decryptedFiles.length > 0 && (
+          {files.length > 0 && (
             <div>
               <div style={{ marginBottom: 8, color: "#fff" }}>
                 복호화된 파일 목록
               </div>
-              {decryptedFiles.map((file, idx) => (
+              {files.map((file, idx) => (
                 <div key={idx}>
                   <a
                     href={URL.createObjectURL(file)}
@@ -88,7 +74,10 @@ function DecryptPage() {
             </div>
           )}
 
-          <DecryptButton handleDecrypt={handleDecrypt} />
+          <DecryptButton
+            handleDecrypt={handleDecrypt}
+            disabled={inputLoading}
+          />
         </Space>
       </DecryptCard>
     </DecryptLayout>

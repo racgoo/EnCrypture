@@ -10,6 +10,7 @@ interface EncryptionResultProps {
   percentage: number;
   finished: boolean;
   encryptedFiles: string[];
+  encryptedFileNames: string[];
 }
 
 function EncryptionResult({
@@ -17,9 +18,13 @@ function EncryptionResult({
   percentage,
   finished,
   encryptedFiles,
+  encryptedFileNames,
 }: EncryptionResultProps) {
   const handleDownloadEncryptedHtml = useCallback(() => {
-    const redirectionHtmlTemplete = getRedirectionHtmlTemplete(encryptedFiles);
+    const redirectionHtmlTemplete = getRedirectionHtmlTemplete(
+      encryptedFiles,
+      encryptedFileNames
+    );
     downloadHtml(redirectionHtmlTemplete);
   }, [encryptedFiles]);
 

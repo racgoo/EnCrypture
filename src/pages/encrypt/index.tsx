@@ -1,6 +1,7 @@
-import { useMetadataRepository } from "@features/repository";
 import { Space, Typography } from "antd";
 import { useCallback, useMemo, useState } from "react";
+import { flushSync } from "react-dom";
+import { useNavigate } from "react-router-dom";
 import { EncryptButton } from "./components/EncryptButton";
 import { EncryptionResult } from "./components/EncryptionResult";
 import { EncryptLayout } from "./components/EncryptLayout";
@@ -12,14 +13,11 @@ import { MAX_FILE_SIZE_STRING } from "./constants";
 import { useEncrypt } from "./hooks/useEncrypt";
 import { useFile } from "./hooks/useFile";
 import { usePassword } from "./hooks/usePassword";
-import { flushSync } from "react-dom";
-import { useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
 
 function EncryptPage() {
   const navigate = useNavigate();
-  const { setMetadata } = useMetadataRepository();
   const { files, handleAddFile, handleDeleteFile } = useFile();
   const { password, setPassword, error, valid } = usePassword();
   const { encrypt, percentage, message } = useEncrypt({
@@ -29,6 +27,7 @@ function EncryptPage() {
   const [encryptLoading, setEncryptLoading] = useState(false);
   const [encryptFinished, setEncryptFinished] = useState(false);
   const [encryptedFiles, setEncryptedFiles] = useState<string[]>([]);
+  const [encryptedFileNames, setEncryptedFileNames] = useState<string[]>([]);
 
   const handleEncrypt = useCallback(async () => {
     flushSync(() => {
@@ -37,15 +36,13 @@ function EncryptPage() {
     });
     const fileNames = files.map((file) => file.name);
     const encryptedFiles = await encrypt();
-    setEncryptedFiles(encryptedFiles);
-    fileNames.forEach((fileName, index) => {
-      setMetadata(fileName, encryptedFiles[index]);
-    });
     flushSync(() => {
+      setEncryptedFiles(encryptedFiles);
+      setEncryptedFileNames(fileNames);
       setEncryptLoading(false);
       setEncryptFinished(true);
     });
-  }, [encrypt, files, setMetadata]);
+  }, [encrypt, files]);
 
   const buttonDisabled = useMemo(
     () => files.length === 0 || valid === false || encryptLoading,
@@ -100,6 +97,7 @@ function EncryptPage() {
           message={message}
           percentage={percentage}
           finished={encryptFinished}
+          encryptedFileNames={encryptedFileNames}
           encryptedFiles={encryptedFiles}
         />
 
