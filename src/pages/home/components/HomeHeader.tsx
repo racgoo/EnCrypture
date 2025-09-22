@@ -10,6 +10,9 @@ function HomeHeader() {
         <Space direction="vertical" align="center">
           <ThunderboltOutlined style={{ fontSize: 48, color: "#1677ff" }} />
           <Title level={1} style={{ marginBottom: 0 }}>
+            DeCrypture
+          </Title>
+          <Title level={2} style={{ marginBottom: 0 }}>
             파일 암호화 HTML 변환기
           </Title>
           <Text type="secondary">
