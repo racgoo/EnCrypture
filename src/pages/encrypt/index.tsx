@@ -7,15 +7,18 @@ import { TypeSelect } from "./components/TypeSelect";
 import { EncryptButton } from "./components/EncryptButton";
 import { MAX_FILE_SIZE_STRING } from "./constants";
 import { useFile } from "./hooks/useFile";
+import { usePassword } from "./hooks/usePassword";
+import { PasswordInput } from "./components/PasswordInput";
 
 const { Title, Text } = Typography;
 
 function EncryptPage() {
   const { files, handleAddFile, handleDeleteFile } = useFile();
+  const { password, setPassword, error } = usePassword();
 
   const handleEncrypt = useCallback(() => {
     message.info("암호화 기능은 곧 제공됩니다!");
-  }, [files]);
+  }, [files, password]);
 
   return (
     <EncryptLayout>
@@ -49,6 +52,13 @@ function EncryptPage() {
           files={files}
           handleAddFile={handleAddFile}
           handleDeleteFile={handleDeleteFile}
+        />
+
+        <PasswordInput
+          password={password}
+          setPassword={setPassword}
+          error={error}
+          placeholder="영문, 숫자, 특수문자 포함 6자 이상"
         />
 
         <EncryptButton
