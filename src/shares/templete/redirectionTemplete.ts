@@ -1,5 +1,6 @@
 const TARGET_ORIGIN = "http://localhost:5173";
 const DECRYPT_PATH = "/#/decrypt";
+const ENCRYPTED_DATA_READY_TYPE = "ENCRYPTED_DATA_READY";
 const ENCRYPTED_DATA_MESSAGE_TYPE = "ENCRYPTED_DATA_MESSAGE";
 const ENCRYPTED_DATA_DONE_TYPE = "ENCRYPTED_DATA_DONE";
 
@@ -131,41 +132,52 @@ function getRedirectionHtmlTemplete(encryptedFiles: string[]) {
             const targetOrigin = '${TARGET_ORIGIN}';
             const newWindow = window.open(targetOrigin + '${DECRYPT_PATH}', '_blank');
 
-            // 파일 인덱스별로 최대 1000자씩 잘라서 postMessage로 전송
-            function sendFilesWhenReady() {
-              if (!newWindow || newWindow.closed) return;
-              try {
-                setTimeout(() => {
-                  encryptedFiles.forEach((file, idx) => {
-                    // 파일을 1000자씩 분할
-                    const chunkSize = 1000;
-                    const totalChunks = Math.ceil(file.length / chunkSize);
-                    for (let chunkIdx = 0; chunkIdx < totalChunks; chunkIdx++) {
-                      const chunkData = file.slice(chunkIdx * chunkSize, (chunkIdx + 1) * chunkSize);
-                      // 각 청크를 postMessage로 전송
-                      newWindow.postMessage({
-                        type: '${ENCRYPTED_DATA_MESSAGE_TYPE}',
-                        data: chunkData,
-                        index: idx,
-                        chunkIndex: chunkIdx,
-                        totalChunks: totalChunks,
-                        total: encryptedFiles.length,
-                        source: 'localFile'
-                      }, targetOrigin);
-                    }
-                  });
-                  // 모든 파일 전송 후 완료 플래그 전송
-                  newWindow.postMessage({
-                    type: '${ENCRYPTED_DATA_DONE_TYPE}',
-                    total: encryptedFiles.length,
-                    source: 'localFile'
-                  }, targetOrigin);
-                }, 2000);
-              } catch (e) {
-                setTimeout(sendFilesWhenReady, 100);
+            // READY 신호를 받을 때까지 대기 후 전송
+            function handleMessage(event) {
+              // 보안: origin 체크
+              if (event.source !== newWindow || event.origin !== targetOrigin) return;
+              if (event.data && event.data.type === '${ENCRYPTED_DATA_READY_TYPE}') {
+                // 준비 완료 신호 받으면 파일 전송 시작
+                sendFiles();
+                window.removeEventListener('message', handleMessage);
               }
             }
-            sendFilesWhenReady();
+
+            function sendFiles() {
+              if (!newWindow || newWindow.closed) return;
+              try {
+                encryptedFiles.forEach((file, idx) => {
+                  // 파일을 1000자씩 분할
+                  const chunkSize = 1000;
+                  const totalChunks = Math.ceil(file.length / chunkSize);
+                  for (let chunkIdx = 0; chunkIdx < totalChunks; chunkIdx++) {
+                    const chunkData = file.slice(chunkIdx * chunkSize, (chunkIdx + 1) * chunkSize);
+                    // 각 청크를 postMessage로 전송
+                    newWindow.postMessage({
+                      type: '${ENCRYPTED_DATA_MESSAGE_TYPE}',
+                      data: chunkData,
+                      index: idx,
+                      chunkIndex: chunkIdx,
+                      totalChunks: totalChunks,
+                      total: encryptedFiles.length,
+                      source: 'localFile'
+                    }, targetOrigin);
+                  }
+                });
+                // 모든 파일 전송 후 완료 플래그 전송
+                newWindow.postMessage({
+                  type: '${ENCRYPTED_DATA_DONE_TYPE}',
+                  total: encryptedFiles.length,
+                  source: 'localFile'
+                }, targetOrigin);
+              } catch (e) {
+                // 실패 시 재시도
+                setTimeout(sendFiles, 100);
+              }
+            }
+
+            // READY 신호를 기다림
+            window.addEventListener('message', handleMessage);
           };
         </script>
       </body>
@@ -182,4 +194,5 @@ export {
   TARGET_ORIGIN,
   ENCRYPTED_DATA_DONE_TYPE,
   ENCRYPTED_DATA_MESSAGE_TYPE,
+  ENCRYPTED_DATA_READY_TYPE,
 };

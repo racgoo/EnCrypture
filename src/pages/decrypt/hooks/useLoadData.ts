@@ -2,6 +2,7 @@ import { useMetadataRepository } from "@features/repository";
 import {
   ENCRYPTED_DATA_DONE_TYPE,
   ENCRYPTED_DATA_MESSAGE_TYPE,
+  ENCRYPTED_DATA_READY_TYPE,
   ENCRYPTED_DATA_TYPE,
 } from "@shares/templete/redirectionTemplete";
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
@@ -76,6 +77,8 @@ function useLoadData() {
 
   useLayoutEffect(() => {
     setDataLoading(true);
+    //handshake
+    window.opener.postMessage({ type: ENCRYPTED_DATA_READY_TYPE }, "*");
     window.addEventListener("message", handleMessage);
     return () => {
       window.removeEventListener("message", handleMessage);
