@@ -1,6 +1,7 @@
 import { aesEncrypter, argon2Encrypter } from "@features/encrypt";
 import { getBase64FromFile } from "@features/file";
 import { useCallback, useState } from "react";
+import { flushSync } from "react-dom";
 
 interface UseEncryptProps {
   files: File[];
@@ -26,7 +27,9 @@ function useEncrypt({ files, password }: UseEncryptProps) {
               base64File,
               encryptKey
             );
-            setPercentage((prev) => Math.floor(prev + percentageUnit));
+            flushSync(() => {
+              setPercentage((prev) => Math.floor(prev + percentageUnit));
+            });
             return encryptedBase64File;
           })
         );
