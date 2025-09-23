@@ -1,5 +1,5 @@
 import { FileTextOutlined, LockOutlined } from "@ant-design/icons";
-import { message, Progress, Space, Typography } from "antd";
+import { Progress, Space, Typography } from "antd";
 import { Fragment, useMemo } from "react";
 import { DataLoading } from "./components/DataLoading";
 import { DecryptButton } from "./components/DecryptButton";
