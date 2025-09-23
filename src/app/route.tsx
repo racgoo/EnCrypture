@@ -27,7 +27,7 @@ const router = createHashRouter([
 
 export function AppRoutes() {
   const isMobile = useMemo(mobile, []);
-  if (!isMobile) {
+  if (isMobile) {
     return <MobileBlockPage />;
   }
   return <RouterProvider router={router} />;
