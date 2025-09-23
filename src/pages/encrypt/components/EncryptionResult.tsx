@@ -34,7 +34,7 @@ function EncryptionResult({
         width: "100%",
         padding: 28,
         borderRadius: 16,
-        background: "linear-gradient(135deg, #232526 0%, #414345 100%)",
+        background: "linear-gradient(135deg, #274472 0%, #1b263b 100%)",
         boxShadow: "0 4px 24px 0 #0004",
         color: "#fff",
         display: "flex",
@@ -43,7 +43,6 @@ function EncryptionResult({
         fontFamily: "'Pretendard', 'Noto Sans KR', Arial, sans-serif",
         margin: "0 auto",
         marginTop: 24,
-        maxWidth: 420,
       }}
     >
       {percentage > 0 && (
@@ -77,11 +76,11 @@ function EncryptionResult({
             marginTop: 8,
             padding: "0.85em 2.2em",
             borderRadius: 8,
+            border: "2px solid #4361ee",
             background: "linear-gradient(90deg, #4361ee 0%, #48bfe3 100%)",
             color: "#fff",
             fontWeight: 700,
             fontSize: "1.08rem",
-            border: "none",
             boxShadow: "0 2px 8px 0 #0002",
             cursor: "pointer",
             transition: "background 0.2s, box-shadow 0.2s",

@@ -1,4 +1,4 @@
-import { Space, Typography } from "antd";
+import { Card, Space, Typography } from "antd";
 import { useCallback, useMemo, useState } from "react";
 import { flushSync } from "react-dom";
 import { useNavigate } from "react-router-dom";
@@ -51,61 +51,63 @@ function EncryptPage() {
 
   return (
     <EncryptLayout>
-      <Space
-        direction="vertical"
-        size="large"
-        style={{ width: "100%", maxWidth: 600 }}
-      >
-        <Title
-          level={2}
-          style={{ textAlign: "center", marginBottom: 0 }}
-          onClick={() => {
-            navigate("/decrypt");
-          }}
+      <Card style={{ width: 600 }}>
+        <Space
+          direction="vertical"
+          size="middle"
+          style={{ width: "100%", maxWidth: 600 }}
         >
-          파일 암호화
-        </Title>
-        <Text
-          type="secondary"
-          style={{ textAlign: "center", display: "block" }}
-        >
-          여러 파일을 안전하게 암호화할 수 있습니다.
-          <br />
-          {MAX_FILE_SIZE_STRING} 이하의 파일만 업로드할 수 있습니다.
-        </Text>
+          <Title
+            level={2}
+            style={{ textAlign: "center", marginBottom: 0 }}
+            onClick={() => {
+              navigate("/decrypt");
+            }}
+          >
+            파일 암호화
+          </Title>
+          <Text
+            type="secondary"
+            style={{ textAlign: "center", display: "block" }}
+          >
+            여러 파일을 안전하게 암호화할 수 있습니다.
+            <br />
+            {MAX_FILE_SIZE_STRING} 이하의 파일만 업로드할 수 있습니다.
+          </Text>
 
-        <TypeSelect />
+          <TypeSelect />
 
-        <TypeDescription />
+          <TypeDescription />
 
-        <FileUploadDragger
-          disabled={encryptLoading}
-          files={files}
-          handleAddFile={handleAddFile}
-          handleDeleteFile={handleDeleteFile}
-        />
+          <FileUploadDragger
+            disabled={encryptLoading}
+            files={files}
+            handleAddFile={handleAddFile}
+            handleDeleteFile={handleDeleteFile}
+          />
 
-        <PasswordInput
-          disabled={encryptLoading}
-          password={password}
-          setPassword={setPassword}
-          error={error}
-          placeholder="영문, 숫자, 특수문자 포함 6자 이상"
-        />
+          <PasswordInput
+            disabled={encryptLoading}
+            password={password}
+            setPassword={setPassword}
+            error={error}
+            placeholder="영문, 숫자, 특수문자 포함 6자 이상"
+          />
 
-        <EncryptionResult
-          message={message}
-          percentage={percentage}
-          finished={encryptFinished}
-          encryptedFileNames={encryptedFileNames}
-          encryptedFiles={encryptedFiles}
-        />
+          <EncryptionResult
+            message={message}
+            percentage={percentage}
+            finished={encryptFinished}
+            encryptedFileNames={encryptedFileNames}
+            encryptedFiles={encryptedFiles}
+          />
 
-        <EncryptButton
-          disabled={buttonDisabled}
-          handleEncrypt={handleEncrypt}
-        />
-      </Space>
+          <EncryptButton
+            disabled={buttonDisabled}
+            handleEncrypt={handleEncrypt}
+          />
+        </Space>
+      </Card>
     </EncryptLayout>
   );
 }

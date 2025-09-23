@@ -4,6 +4,7 @@ function EncryptLayout({ children }: { children: React.ReactNode }) {
       style={{
         padding: "48px",
         display: "flex",
+        height: "100%",
         justifyContent: "center",
         alignItems: "center",
       }}
