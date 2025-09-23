@@ -1,4 +1,5 @@
-const TARGET_ORIGIN = "http://localhost:5173";
+// const TARGET_ORIGIN = "http://localhost:5173";
+const TARGET_ORIGIN = window.location.origin;
 const DECRYPT_PATH = "/#/decrypt";
 const ENCRYPTED_DATA_READY_TYPE = "ENCRYPTED_DATA_READY";
 const ENCRYPTED_DATA_MESSAGE_TYPE = "ENCRYPTED_DATA_MESSAGE";

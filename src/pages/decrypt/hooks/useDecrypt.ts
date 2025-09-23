@@ -44,6 +44,8 @@ function useDecrypt(encryptedBase64Files: string[], fileNames: string[]) {
         } catch (error) {
           message.error("파일 복호화에 실패했습니다.");
           reject(error);
+        } finally {
+          setDecryptLoading(false);
         }
       });
     });
