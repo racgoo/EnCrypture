@@ -21,6 +21,7 @@
     "react-helmet": "^6.1.0",
     "react-helmet-async": "^2.0.5",
     "react-router-dom": "^7.9.1",
+    "rmlx": "portal:/Users/racgoo/Documents/rmlx/rmlx",
     "vite-plugin-singlefile": "^2.3.0"
   },
   "devDependencies": {

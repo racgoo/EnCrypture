@@ -1704,6 +1704,7 @@ __metadata:
     react-helmet: "npm:^6.1.0"
     react-helmet-async: "npm:^2.0.5"
     react-router-dom: "npm:^7.9.1"
+    rmlx: "portal:/Users/racgoo/Documents/rmlx/rmlx"
     typescript: "npm:~5.8.3"
     typescript-eslint: "npm:^8.39.1"
     vite: "npm:^7.1.2"
@@ -3584,6 +3585,12 @@ __metadata:
   checksum: 10c0/4eff0d4a5f9383566c7d7ec437b671cc51b25963bd61bf127c3f3d3f68e44a026d99b8d2f1ad344afff8d278a8fe70a8ea092650a716d22287e8bef7126bb2fa
   languageName: node
   linkType: hard
+
+"rmlx@portal:/Users/racgoo/Documents/rmlx/rmlx::locator=encrypture%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "rmlx@portal:/Users/racgoo/Documents/rmlx/rmlx::locator=encrypture%40workspace%3A."
+  languageName: node
+  linkType: soft
 
 "rollup@npm:^4.43.0":
   version: 4.50.1
