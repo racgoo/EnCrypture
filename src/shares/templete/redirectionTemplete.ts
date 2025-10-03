@@ -1,6 +1,8 @@
+import type { LangType } from "@shares/locale";
+
 // const TARGET_ORIGIN = "http://localhost:5173";
 const TARGET_ORIGIN = window.location.origin;
-const DECRYPT_PATH = "/decrypt";
+const DECRYPT_PATH = "decrypt";
 const ENCRYPTED_DATA_READY_TYPE = "ENCRYPTED_DATA_READY";
 const ENCRYPTED_DATA_MESSAGE_TYPE = "ENCRYPTED_DATA_MESSAGE";
 const ENCRYPTED_DATA_DONE_TYPE = "ENCRYPTED_DATA_DONE";
@@ -9,7 +11,8 @@ const ENCRYPTED_DATA_TYPE = "ENCRYPTED_DATA";
 
 function getRedirectionHtmlTemplete(
   encryptedFiles: string[],
-  encryptedFileNames: string[]
+  encryptedFileNames: string[],
+  lang: LangType
 ) {
   const redirectionHtmlTemplete = `
       <!DOCTYPE html>
@@ -139,7 +142,7 @@ function getRedirectionHtmlTemplete(
           )};
           document.getElementById('sendBtn').onclick = function() {
             const targetOrigin = '${TARGET_ORIGIN}';
-            const newWindow = window.open(targetOrigin + '${DECRYPT_PATH}', '_blank');
+            const newWindow = window.open(targetOrigin + '/${lang}/${DECRYPT_PATH}', '_blank');
 
             // READY 신호를 받을 때까지 대기 후 전송
             function handleMessage(event) {

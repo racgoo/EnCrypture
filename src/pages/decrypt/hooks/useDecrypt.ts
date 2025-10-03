@@ -3,8 +3,11 @@ import { getFileFromBase64 } from "@features/file";
 import { message } from "antd";
 import { useCallback, useState } from "react";
 import { flushSync } from "react-dom";
+import { localeTable } from "../locale";
+import { useLocale } from "@shares/locale";
 
 function useDecrypt(encryptedBase64Files: string[], fileNames: string[]) {
+  const { t } = useLocale(localeTable);
   const [password, setPassword] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const [decryptLoading, setDecryptLoading] = useState(false);
@@ -13,7 +16,6 @@ function useDecrypt(encryptedBase64Files: string[], fileNames: string[]) {
   const decrypt = useCallback(async () => {
     setDecryptLoading(true);
     setDecryptPercentage(0);
-    console.log("hi");
     const decryptedFiles = await new Promise<File[]>((resolve, reject) => {
       requestIdleCallback(async () => {
         try {
@@ -42,7 +44,7 @@ function useDecrypt(encryptedBase64Files: string[], fileNames: string[]) {
           resolve(decryptedFiles);
           setDecryptPercentage(100);
         } catch (error) {
-          message.error("파일 복호화에 실패했습니다.");
+          message.error(t("decrypt_error_message"));
           reject(error);
         } finally {
           setDecryptLoading(false);
@@ -52,7 +54,7 @@ function useDecrypt(encryptedBase64Files: string[], fileNames: string[]) {
 
     setFiles(decryptedFiles);
     setDecryptLoading(false);
-  }, [password, encryptedBase64Files, fileNames]);
+  }, [password, encryptedBase64Files, fileNames, t]);
 
   return {
     password,

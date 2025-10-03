@@ -1,5 +1,7 @@
 import { Input } from "antd";
 import { LockOutlined } from "@ant-design/icons";
+import { useLocale } from "@shares/locale";
+import { localeTable } from "../locale";
 
 interface PasswordInputProps {
   password: string;
@@ -12,11 +14,12 @@ function PasswordInput({
   setPassword,
   disabled,
 }: PasswordInputProps) {
+  const { t } = useLocale(localeTable);
   return (
     <Input.Password
       disabled={disabled}
       size="large"
-      placeholder="암호를 입력하세요"
+      placeholder={t("password_placeholder")}
       prefix={<LockOutlined />}
       value={password}
       onChange={(e) => setPassword(e.target.value)}

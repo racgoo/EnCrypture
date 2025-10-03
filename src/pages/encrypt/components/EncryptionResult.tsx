@@ -4,6 +4,7 @@ import { Progress } from "antd";
 import { useCallback } from "react";
 import { localeTable } from "../locale";
 import { useLocale } from "@shares/locale";
+import { useLanguage } from "@shares/locale/hooks/useLanguage";
 
 interface EncryptionResultProps {
   message: string;
@@ -21,13 +22,15 @@ function EncryptionResult({
   encryptedFileNames,
 }: EncryptionResultProps) {
   const { t } = useLocale(localeTable);
+  const { lang } = useLanguage();
   const handleDownloadEncryptedHtml = useCallback(() => {
     const redirectionHtmlTemplete = getRedirectionHtmlTemplete(
       encryptedFiles,
-      encryptedFileNames
+      encryptedFileNames,
+      lang
     );
     downloadHtml(redirectionHtmlTemplete);
-  }, [encryptedFiles, encryptedFileNames]);
+  }, [encryptedFiles, encryptedFileNames, lang]);
 
   if (!message) return null;
 

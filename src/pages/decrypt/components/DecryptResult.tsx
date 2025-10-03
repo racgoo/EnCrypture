@@ -1,6 +1,8 @@
 import { DownloadOutlined, CloudDownloadOutlined } from "@ant-design/icons";
 import { downloadFile } from "@features/file";
+import { useLocale } from "@shares/locale";
 import { Button, Space, Tooltip, Typography } from "antd";
+import { localeTable } from "../locale";
 const { Text } = Typography;
 
 interface DecryptResultProps {
@@ -15,6 +17,8 @@ function downloadAllFiles(files: File[]) {
 }
 
 function DecryptResult({ files, success }: DecryptResultProps) {
+  const { t } = useLocale(localeTable);
+
   if (!success) {
     return null;
   }
@@ -42,9 +46,9 @@ function DecryptResult({ files, success }: DecryptResultProps) {
         }}
       >
         <Text strong style={{ fontSize: 20 }}>
-          복호화된 파일 목록
+          {t("decrypt_result_title")}
         </Text>
-        <Tooltip title="모든 파일을 한 번에 다운로드합니다.">
+        <Tooltip title={t("decrypt_result_download_all_files_tooltip")}>
           <Button
             type="primary"
             icon={<DownloadOutlined />}
@@ -58,7 +62,7 @@ function DecryptResult({ files, success }: DecryptResultProps) {
               padding: "0 24px",
             }}
           >
-            모두 다운로드
+            {t("decrypt_result_download_all_files_text")}
           </Button>
         </Tooltip>
       </div>
@@ -86,14 +90,14 @@ function DecryptResult({ files, success }: DecryptResultProps) {
             >
               {file.name}
             </Text>
-            <Tooltip title="이 파일만 다운로드">
+            <Tooltip title={t("decrypt_result_download_file_tooltip")}>
               <Button
                 type="link"
                 icon={<CloudDownloadOutlined twoToneColor="#1677ff,#fff" />}
                 onClick={() => downloadFile(file)}
                 style={{ color: "#1677ff", fontWeight: 500, fontSize: 15 }}
               >
-                다운로드
+                {t("single_download_button_text")}
               </Button>
             </Tooltip>
           </div>
