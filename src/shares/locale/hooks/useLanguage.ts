@@ -1,8 +1,12 @@
 import { useParams } from "react-router-dom";
-import type { LangType } from "../constant";
+import { langs, type LangType } from "../constant";
 
 function useLanguage() {
-  const { lang } = useParams<{ lang: LangType }>();
+  const { lang = langs[0] } = useParams<{ lang: LangType }>();
+  const validation = langs.includes(lang);
+  if (!validation) {
+    return { lang: langs[0] };
+  }
   return { lang };
 }
 

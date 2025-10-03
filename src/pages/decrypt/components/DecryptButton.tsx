@@ -1,5 +1,7 @@
+import { useLocale } from "@shares/locale";
 import { Button } from "antd";
 import { useCallback } from "react";
+import { localeTable } from "../locale";
 
 interface DecryptButtonProps {
   disabled: boolean;
@@ -7,6 +9,7 @@ interface DecryptButtonProps {
 }
 
 function DecryptButton({ handleDecrypt, disabled }: DecryptButtonProps) {
+  const { t } = useLocale(localeTable);
   const handleClick = useCallback(() => {
     handleDecrypt();
   }, [handleDecrypt]);
@@ -20,7 +23,7 @@ function DecryptButton({ handleDecrypt, disabled }: DecryptButtonProps) {
       onClick={handleClick}
       style={{ marginTop: 8 }}
     >
-      복호화하기
+      {t("decrypt_button_text")}
     </Button>
   );
 }

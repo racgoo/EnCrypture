@@ -1,4 +1,6 @@
+import { useLocale } from "@shares/locale";
 import { Progress } from "antd";
+import { localeTable } from "../locale";
 
 interface DataLoadingProps {
   percentage: number;
@@ -11,6 +13,7 @@ function DataLoading({
   chunkCount,
   allChunkCount,
 }: DataLoadingProps) {
+  const { t } = useLocale(localeTable);
   return (
     <div
       style={{
@@ -50,10 +53,10 @@ function DataLoading({
           </style>
         </svg>
         <div style={{ color: "#fff", fontWeight: 700, fontSize: 20 }}>
-          데이터 로드중...({chunkCount}/{allChunkCount})
+          {t("data_loading_message")} ({chunkCount}/{allChunkCount})
         </div>
         <div style={{ color: "#aaa", fontSize: 14, marginTop: 4 }}>
-          암호화된 파일을 안전하게 불러오고 있습니다.
+          {t("data_loading_sub_message")}
         </div>
       </div>
       <Progress
