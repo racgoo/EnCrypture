@@ -11,21 +11,6 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
         <meta name="description" content={t("description")} />
         <meta property="og:title" content={t("title")} />
         <meta property="og:description" content={t("description")} />
-        <link
-          rel="alternate"
-          href="https://encrypture.racgoo.com/ko/"
-          hrefLang="ko"
-        />
-        <link
-          rel="alternate"
-          href="https://encrypture.racgoo.com/en/"
-          hrefLang="en"
-        />
-        <link
-          rel="alternate"
-          href="https://encrypture.racgoo.com/en"
-          hrefLang="x-default"
-        />
       </Helmet>
       {children}
     </>
