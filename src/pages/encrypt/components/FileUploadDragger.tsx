@@ -2,6 +2,8 @@ import { UploadOutlined } from "@ant-design/icons";
 import { Typography, Upload } from "antd";
 import type { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload";
 import { useCallback } from "react";
+import { localeTable } from "../locale";
+import { useLocale } from "@shares/locale";
 
 const { Text } = Typography;
 
@@ -18,6 +20,7 @@ function FileUploadDragger({
   handleDeleteFile,
   disabled,
 }: FileUploadDraggerProps) {
+  const { t } = useLocale(localeTable);
   const handleChange = useCallback(
     (info: UploadChangeParam<UploadFile>) => {
       const { file } = info;
@@ -44,7 +47,7 @@ function FileUploadDragger({
       <p style={{ margin: 0 }}>
         <UploadOutlined style={{ fontSize: 32, color: "#1677ff" }} />
       </p>
-      <Text strong>여기에 파일을 드래그하거나 클릭해서 업로드하세요</Text>
+      <Text strong>{t("file_upload_dragger_text")}</Text>
     </Upload.Dragger>
   );
 }

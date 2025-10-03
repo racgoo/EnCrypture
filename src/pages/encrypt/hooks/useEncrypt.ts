@@ -1,7 +1,9 @@
 import { aesEncrypter, argon2Encrypter } from "@features/encrypt";
 import { getBase64FromFile } from "@features/file";
+import { useLocale } from "@shares/locale";
 import { useCallback, useState } from "react";
 import { flushSync } from "react-dom";
+import { localeTable } from "../locale";
 
 interface UseEncryptProps {
   files: File[];
@@ -9,16 +11,17 @@ interface UseEncryptProps {
 }
 
 function useEncrypt({ files, password }: UseEncryptProps) {
+  const { t } = useLocale(localeTable);
   const [percentage, setPercentage] = useState(0);
   const [message, setMessage] = useState("");
 
   const encrypt = useCallback(async () => {
     setPercentage(0);
-    setMessage("Argon2를 사용하여 암호화 키를 생성중입니다.");
+    setMessage(t("argon2_encrypt_progress_message"));
     const encryptedFiles = await new Promise<string[]>((resolve) => {
       requestIdleCallback(async () => {
         const encryptKey = await argon2Encrypter.hash(password);
-        setMessage("AES-256-GCM을 사용하여 파일을 암호화중입니다.");
+        setMessage(t("aes_encrypt_progress_message"));
         const percentageUnit = 100 / files.length;
         const encryptedFiles = await Promise.all(
           files.map(async (file) => {
@@ -35,12 +38,12 @@ function useEncrypt({ files, password }: UseEncryptProps) {
         );
         resolve(encryptedFiles);
         setPercentage(100);
-        setMessage("암호화가 완료되었습니다.");
+        setMessage(t("encrypt_finished_message"));
       });
     });
 
     return encryptedFiles;
-  }, [files, password]);
+  }, [files, password, t]);
 
   return {
     encrypt,

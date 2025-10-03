@@ -1,4 +1,6 @@
 import { Button } from "antd";
+import { localeTable } from "../locale";
+import { useLocale } from "@shares/locale";
 
 interface EncryptButtonProps {
   handleEncrypt: () => void;
@@ -6,6 +8,7 @@ interface EncryptButtonProps {
 }
 
 function EncryptButton({ disabled, handleEncrypt }: EncryptButtonProps) {
+  const { t } = useLocale(localeTable);
   return (
     <Button
       type="primary"
@@ -15,7 +18,7 @@ function EncryptButton({ disabled, handleEncrypt }: EncryptButtonProps) {
       style={{ marginTop: 16, borderRadius: 8, opacity: disabled ? 0.5 : 1 }}
       onClick={handleEncrypt}
     >
-      암호화 시작
+      {t("start_encrypt_button_text")}
     </Button>
   );
 }

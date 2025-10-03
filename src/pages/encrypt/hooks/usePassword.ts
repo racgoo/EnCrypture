@@ -1,4 +1,6 @@
 import { useMemo, useState } from "react";
+import { localeTable } from "../locale";
+import { useLocale } from "@shares/locale";
 
 function validatePassword(password: string) {
   // 최소 6자리, 숫자 1개, 알파벳 1개, 특수문자 1개 이상
@@ -10,6 +12,7 @@ function validatePassword(password: string) {
 }
 
 function usePassword() {
+  const { t } = useLocale(localeTable);
   const [password, setPassword] = useState("");
 
   const error = useMemo(() => {
@@ -17,10 +20,10 @@ function usePassword() {
       return null;
     }
     if (!validatePassword(password)) {
-      return "비밀번호는 최소 6자리, 숫자/알파벳/특수문자를 각각 1개 이상 포함해야 합니다.";
+      return t("invalid_password_message");
     }
     return null;
-  }, [password]);
+  }, [password, t]);
 
   const valid = useMemo(() => {
     return error === null && password.length > 0;

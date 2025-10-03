@@ -1,7 +1,6 @@
 import { Card, Space, Typography } from "antd";
 import { useCallback, useMemo, useState } from "react";
 import { flushSync } from "react-dom";
-import { useNavigate } from "react-router-dom";
 import { EncryptButton } from "./components/EncryptButton";
 import { EncryptionResult } from "./components/EncryptionResult";
 import { EncryptLayout } from "./components/EncryptLayout";
@@ -13,11 +12,13 @@ import { MAX_FILE_SIZE_STRING } from "./constants";
 import { useEncrypt } from "./hooks/useEncrypt";
 import { useFile } from "./hooks/useFile";
 import { usePassword } from "./hooks/usePassword";
+import { localeTable } from "./locale";
+import { useLocale } from "@shares/locale";
 
 const { Title, Text } = Typography;
 
 function EncryptPage() {
-  const navigate = useNavigate();
+  const { t } = useLocale(localeTable);
   const { files, handleAddFile, handleDeleteFile } = useFile();
   const { password, setPassword, error, valid } = usePassword();
   const { encrypt, percentage, message } = useEncrypt({
@@ -57,22 +58,16 @@ function EncryptPage() {
           size="middle"
           style={{ width: "100%", maxWidth: 600 }}
         >
-          <Title
-            level={2}
-            style={{ textAlign: "center", marginBottom: 0 }}
-            onClick={() => {
-              navigate("/decrypt");
-            }}
-          >
-            파일 암호화
+          <Title level={2} style={{ textAlign: "center", marginBottom: 0 }}>
+            {t("title")}
           </Title>
           <Text
             type="secondary"
             style={{ textAlign: "center", display: "block" }}
           >
-            여러 파일을 안전하게 암호화할 수 있습니다.
+            {t("description_1")}
             <br />
-            {MAX_FILE_SIZE_STRING} 이하의 파일만 업로드할 수 있습니다.
+            {MAX_FILE_SIZE_STRING} {t("description_2")}
           </Text>
 
           <TypeSelect />
@@ -91,7 +86,7 @@ function EncryptPage() {
             password={password}
             setPassword={setPassword}
             error={error}
-            placeholder="영문, 숫자, 특수문자 포함 6자 이상"
+            placeholder={t("password_placeholder")}
           />
 
           <EncryptionResult

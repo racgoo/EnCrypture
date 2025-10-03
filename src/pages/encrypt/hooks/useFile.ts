@@ -1,10 +1,13 @@
 import { useCallback, useState } from "react";
 import type { RcFile } from "antd/es/upload";
 import { message, Upload } from "antd";
-import { MAX_FILE_SIZE } from "../constants";
+import { MAX_FILE_SIZE, MAX_FILE_SIZE_STRING } from "../constants";
+import { useLocale } from "@shares/locale";
+import { localeTable } from "../locale";
 
 function useFile() {
   const [files, setFiles] = useState<RcFile[]>([]);
+  const { t } = useLocale(localeTable);
 
   const handleAddFile = useCallback(
     (file: RcFile) => {
@@ -19,10 +22,10 @@ function useFile() {
         setFiles(nextFiles);
         return file;
       }
-      message.error("100MB를 초과하는 파일은 업로드할 수 없습니다.");
+      message.error(MAX_FILE_SIZE_STRING + t("file_size_error_message"));
       return Upload.LIST_IGNORE;
     },
-    [files]
+    [files, t]
   );
 
   const handleDeleteFile = useCallback(
