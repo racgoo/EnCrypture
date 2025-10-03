@@ -1,8 +1,12 @@
+import { localeTable } from "../../locale";
+import { useLocale } from "@shares/locale";
+
 interface DisabledMarkProps {
   disabled: boolean;
 }
 
 function DisabledMark({ disabled }: DisabledMarkProps) {
+  const { t } = useLocale(localeTable);
   if (disabled) {
     return (
       <div
@@ -19,7 +23,7 @@ function DisabledMark({ disabled }: DisabledMarkProps) {
           boxShadow: "0 2px 8px rgba(250,173,20,0.08)",
         }}
       >
-        곧 제공 예정
+        {t("comingSoon")}
       </div>
     );
   }

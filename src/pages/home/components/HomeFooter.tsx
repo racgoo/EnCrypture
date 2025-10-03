@@ -4,15 +4,17 @@ import {
   MailOutlined,
   GithubOutlined,
 } from "@ant-design/icons";
+import { useLocale } from "@shares/locale";
+import { localeTable } from "../locale";
 const { Text, Link } = Typography;
 
 function HomeFooter() {
+  const { t } = useLocale(localeTable);
   return (
     <Row justify="center" style={{ marginTop: 48 }}>
       <Col>
         <Text type="secondary" style={{ display: "block", marginBottom: 4 }}>
-          <InfoCircleOutlined /> 모든 암호화는 안전하게 처리되며, 개인정보는
-          저장되지 않습니다.
+          <InfoCircleOutlined /> {t("footerDescription")}
         </Text>
         <Text type="secondary" style={{ display: "block", marginBottom: 2 }}>
           <MailOutlined style={{ marginRight: 4 }} />

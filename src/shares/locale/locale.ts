@@ -1,6 +1,4 @@
-import type { LocaleTable } from "./constant";
-
-export const localeTable: LocaleTable = {
+export const localeTable = {
   title: {
     ko: "EnCrypture",
     en: "EnCrypture",

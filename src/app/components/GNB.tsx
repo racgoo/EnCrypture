@@ -37,7 +37,7 @@ const localeTable = {
     ko: "언어 선택",
     en: "Language Selection",
   },
-};
+} as const;
 
 const LANG_OPTIONS: { value: LangType; flag: string; short: string }[] = [
   {

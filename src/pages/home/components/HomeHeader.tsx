@@ -1,9 +1,12 @@
 import { ThunderboltOutlined } from "@ant-design/icons";
+import { useLocale } from "@shares/locale";
 import { Col, Row, Space, Typography } from "antd";
+import { localeTable } from "../locale";
 // import { rules } from "rmlx";
 const { Title, Text } = Typography;
 
 function HomeHeader() {
+  const { t } = useLocale(localeTable);
   return (
     <Row justify="center" style={{ marginBottom: 32 }}>
       <Col>
@@ -13,11 +16,9 @@ function HomeHeader() {
             EnCrypture
           </Title>
           <Title level={2} style={{ marginBottom: 0 }}>
-            파일 암호화 HTML 변환기
+            {t("headerTitle")}
           </Title>
-          <Text type="secondary">
-            오프라인/온라인 모두 지원하는 안전한 파일 암호화 솔루션
-          </Text>
+          <Text type="secondary">{t("headerDescription")}</Text>
         </Space>
       </Col>
     </Row>
