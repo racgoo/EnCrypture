@@ -9,7 +9,6 @@ import { useLanguage } from "@shares/locale/hooks/useLanguage";
 import { useLanguageMutation } from "@shares/locale/hooks/useLanguageMutation";
 import { Button, Col, Drawer, Layout, Menu, Row, Typography } from "antd";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 
 const { Header } = Layout;
 const { Title } = Typography;
@@ -60,9 +59,8 @@ function GNB() {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleLangChange = (value: LangType) => {
-    console.log("handleLangChange", value);
     changeLanguage(value);
-    setDrawerOpen(false);
+    // setDrawerOpen(false);
   };
 
   const navMenu = (
@@ -157,7 +155,7 @@ function GNB() {
         wrap={false}
       >
         <Col flex="none">
-          <Link to="/" style={{ textDecoration: "none" }}>
+          <div onClick={() => navigate("/")} style={{ textDecoration: "none" }}>
             <Row align="middle" gutter={8} wrap={false}>
               <Col>
                 <LockOutlined
@@ -186,7 +184,7 @@ function GNB() {
                 </Title>
               </Col>
             </Row>
-          </Link>
+          </div>
         </Col>
         <Col flex="auto" style={{ textAlign: "right" }}>
           <Button
