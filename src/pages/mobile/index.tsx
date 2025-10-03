@@ -11,7 +11,6 @@ function MobileBlockPage() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        background: "#22222",
         padding: "16px",
       }}
     >
@@ -26,6 +25,13 @@ function MobileBlockPage() {
           </Text>
         }
         icon={<span style={{ fontSize: 48 }}>📵</span>}
+        style={{
+          background: "#444444",
+          border: "1px solid #222222",
+          borderRadius: 16,
+          padding: 16,
+          boxShadow: "0 4px 24px #0008",
+        }}
       />
     </div>
   );
