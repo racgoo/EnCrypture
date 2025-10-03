@@ -4,12 +4,9 @@ import { HomePage } from "@pages/home";
 import MobileBlockPage from "@pages/mobile";
 import NotFoundPage from "@pages/notFound";
 import { getDefaultLocalePath, langs, type LangType } from "@shares/locale";
-import { openPopup } from "@shares/popup";
-import mobile from "is-mobile";
-import { useEffect, useMemo } from "react";
+import isMobile from "is-mobile";
 import {
   createBrowserRouter,
-  Navigate,
   redirect,
   RouterProvider,
 } from "react-router-dom";
@@ -26,7 +23,8 @@ const router = createBrowserRouter([
     loader: ({ params }) => {
       const validation = langs.includes(params.lang as LangType);
       if (!validation) {
-        return redirect("/not-found");
+        const defaultLocale = getDefaultLocalePath();
+        return redirect(`/${defaultLocale}/not-found`);
       }
     },
     element: <AppLayout />,
@@ -35,6 +33,7 @@ const router = createBrowserRouter([
         index: true,
         element: <HomePage />,
       },
+
       {
         path: "encrypt/:type",
         loader: ({ params }) => {
@@ -42,35 +41,43 @@ const router = createBrowserRouter([
             params.type as string
           );
           if (!validation) {
-            return redirect("/not-found");
+            return redirect(`/${params.lang}/not-found`);
+          }
+          if (isMobile()) {
+            return redirect(`/${params.lang}/mobile-not-supported`);
           }
         },
         element: <EncryptPage />,
       },
+
       {
         path: "decrypt",
+        loader: ({ params }) => {
+          if (isMobile()) {
+            return redirect(`/${params.lang}/mobile-not-supported`);
+          }
+        },
         element: <DecryptPage />,
       },
+
+      {
+        path: "mobile-not-supported",
+        element: <MobileBlockPage />,
+      },
+
+      {
+        path: "not-found",
+        element: <NotFoundPage />,
+      },
+
+      {
+        path: "*",
+        element: <NotFoundPage />,
+      },
     ],
-  },
-  {
-    path: "*",
-    element: <Navigate to="/not-found" />,
-  },
-  {
-    path: "not-found",
-    element: <NotFoundPage />,
   },
 ]);
 
 export function AppRoutes() {
-  const isMobile = useMemo(mobile, []);
-
-  useEffect(() => {
-    if (isMobile) {
-      openPopup(<MobileBlockPage />);
-    }
-  }, [isMobile]);
-
   return <RouterProvider router={router} />;
 }

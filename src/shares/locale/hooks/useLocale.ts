@@ -9,6 +9,7 @@ function useLocale<T extends LocaleTable>(table: T) {
 
   const t = useCallback(
     <K extends keyof T>(key: K): T[K][LangType] => {
+      console.log(lang);
       if (!lang) {
         return "";
       }

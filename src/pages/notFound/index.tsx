@@ -1,9 +1,12 @@
+import { useLocale } from "@shares/locale";
 import { Result } from "antd";
 import { Typography } from "antd";
+import { localeTable } from "./locale";
 
 const { Text } = Typography;
 
 function NotFoundPage() {
+  const { t } = useLocale(localeTable);
   return (
     <div
       style={{
@@ -17,14 +20,14 @@ function NotFoundPage() {
     >
       <Result
         status="404"
-        title="페이지를 찾을 수 없습니다"
+        title={t("title")}
         subTitle={
           <Text>
-            요청하신 페이지를 찾을 수 없습니다.
+            {t("description_1")}
             <br />
-            주소가 잘못되었거나, 존재하지 않는 페이지입니다.
+            {t("description_2")}
             <br />
-            메인 페이지로 이동해 주세요.
+            {t("description_3")}
           </Text>
         }
         icon={<span style={{ fontSize: 48 }}>🔍</span>}

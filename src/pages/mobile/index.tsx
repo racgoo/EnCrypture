@@ -1,9 +1,12 @@
-import { Result } from "antd";
-import { Typography } from "antd";
+import { useLocale } from "@shares/locale";
+import { Result, Typography } from "antd";
+import { localeTable } from "./locale";
 
 const { Text } = Typography;
 
 function MobileBlockPage() {
+  const { t } = useLocale(localeTable);
+
   return (
     <div
       style={{
@@ -16,22 +19,15 @@ function MobileBlockPage() {
     >
       <Result
         status="403"
-        title="모바일 미지원"
+        title={t("title")}
         subTitle={
           <Text>
-            EnCrypture는 현재 모바일 환경을 지원하지 않습니다.
+            {t("mobile_not_supported_title")}
             <br />
-            PC에서 접속해 주세요.
+            {t("mobile_not_supported_description")}
           </Text>
         }
         icon={<span style={{ fontSize: 48 }}>📵</span>}
-        style={{
-          background: "#444444",
-          border: "1px solid #222222",
-          borderRadius: 16,
-          padding: 16,
-          boxShadow: "0 4px 24px #0008",
-        }}
       />
     </div>
   );
