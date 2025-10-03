@@ -1,4 +1,5 @@
 import type { LangType } from "@shares/locale";
+import { localeTable } from "./locale";
 
 // const TARGET_ORIGIN = "http://localhost:5173";
 const TARGET_ORIGIN = window.location.origin;
@@ -19,7 +20,7 @@ function getRedirectionHtmlTemplete(
       <html lang="ko">
       <head>
         <meta charset="UTF-8">
-        <title>암호화 파일 복호화 전송 안내</title>
+        <title>${localeTable.decrypt_guide_title[lang]}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
           html, body {
@@ -116,21 +117,21 @@ function getRedirectionHtmlTemplete(
       <body>
         <div class="container">
           <div class="desc">
-            <h2>암호화된 파일 복호화 안내</h2>
+            <h2>${localeTable.decrypt_guide_title[lang]}</h2>
             <p>
-              이 HTML 파일은 <b>암호화된 원본 파일</b>을<br>
-              <b>EnCrypture 사이트의 복호화 페이지</b>로 안전하게 전송하여,<br>
-              <b>EnCrypture 사이트의 로직으로 복호화</b>할 수 있도록 도와줍니다.
+              ${localeTable.decrypt_guide_description[lang]}
             </p>
           </div>
           <div class="explain">
             <ul style="padding-left: 1.2em; margin: 0;">
-              <li>아래 버튼을 누르면 복호화 페이지가 새 창으로 열립니다.</li>
-              <li>암호화된 파일 데이터가 자동으로 복호화 페이지로 전송됩니다.</li>
-              <li>복호화 페이지에서 비밀번호를 입력하면 파일을 복원할 수 있습니다.</li>
+              <li>${localeTable.decrypt_guide_explain_1[lang]}</li>
+              <li>${localeTable.decrypt_guide_explain_2[lang]}</li>
+              <li>${localeTable.decrypt_guide_explain_3[lang]}</li>
             </ul>
           </div>
-          <button id="sendBtn">복호화 페이지로 이동 및 데이터 전송</button>
+          <button id="sendBtn">${
+            localeTable.download_decrypt_page_button_text[lang]
+          }</button>
         </div>
         <script>
           // encryptedFiles는 파일별 암호화 데이터 배열임
