@@ -1,7 +1,7 @@
-import { Outlet } from "react-router-dom";
-import { GNB, GNB_HEIGHT } from "./GNB";
-import { Footer } from "./Footer";
 import { LocaleHelmet } from "@shares/locale";
+import { Outlet } from "react-router-dom";
+import { Footer } from "./Footer";
+import { GNB, GNB_HEIGHT } from "./GNB";
 
 function AppLayout() {
   return (

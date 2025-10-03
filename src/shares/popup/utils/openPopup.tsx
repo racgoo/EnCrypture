@@ -1,6 +1,7 @@
 import { overlay } from "overlay-kit";
+import type { ComponentType } from "react";
 
-function openPopup(component: React.ReactNode) {
+function openPopup(Component: ComponentType) {
   overlay.open(({ unmount }) => (
     <div
       style={{
@@ -47,7 +48,7 @@ function openPopup(component: React.ReactNode) {
           ×
         </span>
       </button>
-      {component}
+      <Component />
     </div>
   ));
 }
