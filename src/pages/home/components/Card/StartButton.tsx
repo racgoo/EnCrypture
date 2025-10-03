@@ -1,10 +1,13 @@
 import { InfoCircleOutlined } from "@ant-design/icons";
+import { localeTable } from "../../locale";
+import { useLocale } from "@shares/locale";
 import { useLocaleNavigate } from "@shares/locale/hooks/useLocaleNavigate";
 import { Button, Space, Tooltip } from "antd";
 import { useCallback } from "react";
 
 function StartButton({ disabled, href }: { disabled: boolean; href: string }) {
   const navigate = useLocaleNavigate();
+  const { t } = useLocale(localeTable);
   const onClick = useCallback(() => {
     navigate(href);
   }, [href, navigate]);
@@ -20,7 +23,7 @@ function StartButton({ disabled, href }: { disabled: boolean; href: string }) {
       >
         <Space>
           Coming Soon
-          <Tooltip title="곧 제공 예정입니다!">
+          <Tooltip title={t("comingSoon")}>
             <InfoCircleOutlined />
           </Tooltip>
         </Space>
@@ -36,7 +39,7 @@ function StartButton({ disabled, href }: { disabled: boolean; href: string }) {
       style={{ marginTop: 16 }}
       onClick={onClick}
     >
-      시작하기
+      {t("start")}
     </Button>
   );
 }
