@@ -1,17 +1,14 @@
-import { HelmetProvider } from "react-helmet-async";
 import { AntdProvider } from "@shares/antd";
-import { AppRoutes } from "./route";
 import { OverlayProvider } from "overlay-kit";
-import { LocaleProvider } from "@shares/locale";
+import { HelmetProvider } from "react-helmet-async";
+import { AppRoutes } from "./route";
 
 function App() {
   return (
     <AntdProvider>
       <HelmetProvider>
         <OverlayProvider>
-          <LocaleProvider>
-            <AppRoutes />
-          </LocaleProvider>
+          <AppRoutes />
         </OverlayProvider>
       </HelmetProvider>
     </AntdProvider>

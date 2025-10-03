@@ -17,7 +17,7 @@ function useLocale<T extends LocaleTable>(table: T) {
     [lang, table]
   );
 
-  return { t, lang };
+  return { t };
 }
 
 export { useLocale };

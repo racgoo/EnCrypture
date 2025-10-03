@@ -31,5 +31,5 @@
       "@shares/*": ["shares/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "src/app/components/.tsx"]
 }

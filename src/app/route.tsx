@@ -1,22 +1,26 @@
-import {
-  Navigate,
-  RouterProvider,
-  createBrowserRouter,
-  redirect,
-} from "react-router-dom";
-import { HomePage } from "@pages/home";
-import { EncryptPage } from "@pages/encrypt";
 import { DecryptPage } from "@pages/decrypt";
+import { EncryptPage } from "@pages/encrypt";
+import { HomePage } from "@pages/home";
+import MobileBlockPage from "@pages/mobile";
+import NotFoundPage from "@pages/notFound";
+import { getDefaultLocalePath, langs, type LangType } from "@shares/locale";
+import { openPopup } from "@shares/popup";
 import mobile from "is-mobile";
 import { useEffect, useMemo } from "react";
-import MobileBlockPage from "@pages/mobile";
-// import { LocaleProvider } from "@shares/locale";
-import NotFoundPage from "@pages/notFound";
-import { openPopup } from "@shares/popup";
-import { getDefaultLocalePath, langs, type LangType } from "@shares/locale";
+import {
+  createBrowserRouter,
+  Navigate,
+  redirect,
+  RouterProvider,
+} from "react-router-dom";
+import { AppLayout } from "./components/AppLayout";
 
 const router = createBrowserRouter([
-  { path: "/", loader: () => redirect(getDefaultLocalePath()), element: null },
+  {
+    path: "/",
+    loader: () => redirect(getDefaultLocalePath()),
+    element: <AppLayout />,
+  },
   {
     path: "/:lang",
     loader: ({ params }) => {
@@ -25,6 +29,7 @@ const router = createBrowserRouter([
         return redirect("/not-found");
       }
     },
+    element: <AppLayout />,
     children: [
       {
         index: true,
@@ -32,6 +37,14 @@ const router = createBrowserRouter([
       },
       {
         path: "encrypt/:type",
+        loader: ({ params }) => {
+          const validation = ["client", "server"].includes(
+            params.type as string
+          );
+          if (!validation) {
+            return redirect("/not-found");
+          }
+        },
         element: <EncryptPage />,
       },
       {
