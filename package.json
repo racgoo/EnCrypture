@@ -16,10 +16,12 @@
     "crypto-js": "^4.2.0",
     "eslint-plugin-barrel-rules": "^1.2.0",
     "is-mobile": "^5.0.0",
+    "overlay-kit": "1.8.4",
     "react": "^18",
     "react-dom": "^18",
     "react-helmet": "^6.1.0",
     "react-helmet-async": "^2.0.5",
+    "react-i18next": "^16.0.0",
     "react-router-dom": "^7.9.1",
     "rmlx": "portal:/Users/racgoo/Documents/rmlx/rmlx",
     "vite-plugin-singlefile": "^2.3.0"

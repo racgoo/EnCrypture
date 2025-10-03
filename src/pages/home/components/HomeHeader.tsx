@@ -1,10 +1,9 @@
 import { ThunderboltOutlined } from "@ant-design/icons";
 import { Col, Row, Space, Typography } from "antd";
-import { rules } from "rmlx";
+// import { rules } from "rmlx";
 const { Title, Text } = Typography;
 
 function HomeHeader() {
-  console.log(rules);
   return (
     <Row justify="center" style={{ marginBottom: 32 }}>
       <Col>

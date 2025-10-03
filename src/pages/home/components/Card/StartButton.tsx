@@ -1,10 +1,10 @@
 import { InfoCircleOutlined } from "@ant-design/icons";
+import { useLocaleNavigate } from "@shares/locale/hooks/useLocaleNavigate";
 import { Button, Space, Tooltip } from "antd";
 import { useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 
 function StartButton({ disabled, href }: { disabled: boolean; href: string }) {
-  const navigate = useNavigate();
+  const navigate = useLocaleNavigate();
   const onClick = useCallback(() => {
     navigate(href);
   }, [href, navigate]);
