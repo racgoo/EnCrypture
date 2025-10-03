@@ -2,6 +2,8 @@ import { downloadHtml } from "@features/file";
 import { getRedirectionHtmlTemplete } from "@shares/templete";
 import { Progress } from "antd";
 import { useCallback } from "react";
+import { localeTable } from "../locale";
+import { useLocale } from "@shares/locale";
 
 interface EncryptionResultProps {
   message: string;
@@ -18,6 +20,7 @@ function EncryptionResult({
   encryptedFiles,
   encryptedFileNames,
 }: EncryptionResultProps) {
+  const { t } = useLocale(localeTable);
   const handleDownloadEncryptedHtml = useCallback(() => {
     const redirectionHtmlTemplete = getRedirectionHtmlTemplete(
       encryptedFiles,
@@ -86,7 +89,7 @@ function EncryptionResult({
             transition: "background 0.2s, box-shadow 0.2s",
           }}
         >
-          🔒 복호화 페이지 다운로드
+          🔒 {t("download_decrypt_page_button_text")}
         </button>
       )}
     </div>
