@@ -1,5 +1,6 @@
 import { aesEncrypter, argon2Encrypter } from "@features/encrypt";
 import { getBase64FromFile } from "@features/file";
+
 import { useLocale } from "@shares/locale";
 import { useCallback, useState } from "react";
 import { flushSync } from "react-dom";

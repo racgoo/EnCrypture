@@ -2,7 +2,7 @@ import { ThunderboltOutlined } from "@ant-design/icons";
 import { useLocale } from "@shares/locale";
 import { Col, Row, Space, Typography } from "antd";
 import { localeTable } from "../locale";
-// import { rules } from "rmlx";
+
 const { Title, Text } = Typography;
 
 function HomeHeader() {

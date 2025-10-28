@@ -34,8 +34,27 @@ export default tseslint.config([
         {
           paths: ["src/pages/*", "src/features/*", "src/entities/*"],
           baseDir: __dirname,
-          isolated: false,
-          allowedImportPaths: [],
+        },
+      ],
+      "barrel-rules/isolate-barrel-file": [
+        "error",
+        {
+          isolations: [
+            {
+              path: "src/pages/*",
+              allowedPaths: ["src/features/*", "src/entities/*"],
+            },
+            {
+              path: "src/features/*",
+              allowedPaths: ["src/entities/*"],
+            },
+            {
+              path: "src/entities/*",
+              allowedPaths: [],
+            },
+          ],
+          baseDir: __dirname,
+          globalAllowPaths: ["src/shares/*"],
         },
       ],
       "barrel-rules/no-wildcard": ["error"],

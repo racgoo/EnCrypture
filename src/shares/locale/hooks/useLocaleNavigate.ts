@@ -7,7 +7,6 @@ function useLocaleNavigate() {
   const nativeNavigate = useNavigate();
   const navigate = useCallback(
     (path: string, options: NavigateOptions = {}) => {
-      console.log(`/${lang}${path}`);
       nativeNavigate(`/${lang}${path}`, { ...options });
     },
     [nativeNavigate, lang]
