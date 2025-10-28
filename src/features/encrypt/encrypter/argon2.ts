@@ -1,5 +1,5 @@
 import { argon2idAsync } from "@noble/hashes/argon2.js";
-import { bytesToHex } from "@noble/hashes/utils";
+import { bytesToHex } from "@noble/hashes/utils.js";
 import {
   ENCRYPT_HASH_HASH_LEN,
   ENCRYPT_HASH_MEM,

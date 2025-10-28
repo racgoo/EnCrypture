@@ -5,12 +5,12 @@ import {
 } from "@ant-design/icons";
 import { Col, Row, Tag, Typography } from "antd";
 
+import { useLocale } from "@shares/locale";
+import { useMemo } from "react";
 import { OptionCard } from "./components/Card/OptionCard";
+import { HomeFooter } from "./components/HomeFooter";
 import { HomeHeader } from "./components/HomeHeader";
 import { HomeLayout } from "./components/HomeLayout";
-import { HomeFooter } from "./components/HomeFooter";
-import { useMemo } from "react";
-import { useLocale } from "@shares/locale";
 import { localeTable } from "./locale";
 
 const { Title, Paragraph } = Typography;
