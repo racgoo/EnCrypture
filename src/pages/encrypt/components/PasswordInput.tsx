@@ -1,6 +1,10 @@
-import { Input } from "antd";
 import { LockOutlined } from "@ant-design/icons";
-import { Fragment } from "react/jsx-runtime";
+import { useLocale } from "@shares/locale";
+import { Input } from "antd";
+import { localeTable } from "../locale";
+import { Typography } from "antd";
+
+const { Text } = Typography;
 
 interface PasswordInputProps {
   password: string;
@@ -17,8 +21,19 @@ function PasswordInput({
   placeholder,
   disabled,
 }: PasswordInputProps) {
+  const { t } = useLocale(localeTable);
   return (
-    <Fragment>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "start",
+      }}
+    >
+      <Text type="secondary" style={{ textAlign: "start", display: "block" }}>
+        {t("password_description")}
+      </Text>
       <Input.Password
         disabled={disabled}
         size="large"
@@ -33,7 +48,7 @@ function PasswordInput({
           {error}
         </div>
       )}
-    </Fragment>
+    </div>
   );
 }
 

@@ -63,6 +63,22 @@ const localeTable = {
     ko: "암호화가 완료되었습니다.",
     en: "Encryption completed.",
   },
+  retry_count_placeholder: {
+    ko: "암호 입력 시도 제한 횟수 (기본 5회)",
+    en: "Password input attempt limit (default 5 times)",
+  },
+  retry_count_description: {
+    ko: "암호 입력 시도 제한 횟수를 설정합니다. (기본 5회)",
+    en: "Set the password input attempt limit. (default 5 times)",
+  },
+  password_description: {
+    ko: "암호를 입력하세요. 최소 6자리, 숫자/알파벳/특수문자를 각각 1개 이상 포함해야 합니다.",
+    en: "Enter the password. It must contain at least one number, one letter, and one special character.",
+  },
+  client_argon2_caution: {
+    ko: "클라이언트 암호화에서는 Argon2 알고리즘을 사용합니다. 모바일 환경에서는 Argon2 알고리즘이 동작하기 어려울 수 있습니다.",
+    en: "The Argon2 algorithm may not work properly in mobile environments.",
+  },
 } as const;
 
 export { localeTable };

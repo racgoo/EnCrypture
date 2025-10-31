@@ -4,6 +4,7 @@ import { useLocale } from "@shares/locale";
 import { useLocaleNavigate } from "@shares/locale/hooks/useLocaleNavigate";
 import { Button, Space, Tooltip } from "antd";
 import { useCallback } from "react";
+import { motion } from "motion/react";
 
 function StartButton({ disabled, href }: { disabled: boolean; href: string }) {
   const navigate = useLocaleNavigate();
@@ -32,15 +33,17 @@ function StartButton({ disabled, href }: { disabled: boolean; href: string }) {
   }
 
   return (
-    <Button
-      type="primary"
-      size="large"
-      block
-      style={{ marginTop: 16 }}
-      onClick={onClick}
-    >
-      {t("start")}
-    </Button>
+    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.8 }}>
+      <Button
+        type="primary"
+        size="large"
+        block
+        style={{ marginTop: 16 }}
+        onClick={onClick}
+      >
+        {t("start")}
+      </Button>
+    </motion.div>
   );
 }
 

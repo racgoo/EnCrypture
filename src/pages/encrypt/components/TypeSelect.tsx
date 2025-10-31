@@ -22,11 +22,17 @@ function TypeSelect() {
       }}
       size="large"
     >
-      <Radio.Button value="client" style={{ padding: "0 32px" }}>
+      <Radio.Button
+        value="client"
+        style={{ padding: "0 32px", height: "auto" }}
+      >
         <LockOutlined style={{ marginRight: 8 }} />
         Client
       </Radio.Button>
-      <Radio.Button value="server" style={{ padding: "0 32px" }} disabled>
+      <Radio.Button
+        value="server"
+        style={{ padding: "0 32px", height: "auto" }}
+      >
         <CloudServerOutlined style={{ marginRight: 8 }} />
         Server
       </Radio.Button>

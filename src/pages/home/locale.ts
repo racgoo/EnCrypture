@@ -35,6 +35,10 @@ const localeTable = {
     ko: "온라인 암호화",
     en: "Online Encryption",
   },
+  "argon2+aes": {
+    ko: "Argon2 + AES",
+    en: "Argon2 + AES",
+  },
   onlineDescription_1: {
     ko: "서버를 통한 고급 암호화 및 문서 관리 기능을 제공합니다.",
     en: "Provide advanced encryption and document management features through the server.",

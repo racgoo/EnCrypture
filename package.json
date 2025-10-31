@@ -8,17 +8,21 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "deploy": "pnpm run build && aws s3 sync dist/ s3://yangbong-front/ --delete"
+    "deploy": "pnpm run build &&   aws s3 sync dist/ s3://yangbong-front/ --delete --exclude \"index.html\" &&   aws s3 cp dist/index.html s3://yangbong-front/index.html     --cache-control \"no-cache, no-store, must-revalidate\"     --content-type text/html "
   },
   "dependencies": {
     "@ant-design/icons": "^6.1.0",
     "@noble/hashes": "^2.0.0",
+    "@tanstack/react-query": "^5.90.5",
     "antd": "^5.27.3",
     "crypto-js": "^4.2.0",
+    "framer-motion": "^12.23.24",
     "is-mobile": "^5.0.0",
+    "motion": "^12.23.24",
     "overlay-kit": "1.8.4",
     "react": "^18",
     "react-dom": "^18",
+    "react-error-boundary": "^6.0.0",
     "react-helmet": "^6.1.0",
     "react-helmet-async": "^2.0.5",
     "react-router-dom": "^7.9.1",
