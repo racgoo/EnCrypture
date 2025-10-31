@@ -60,36 +60,39 @@ function useEncrypt({ files, password }: UseEncryptProps) {
     };
   }, [files, password, t]);
 
-  const serverEncrypt = useCallback(async (): Promise<EncryptResult> => {
-    setPercentage(0);
-    const { encryptionId, hashKey } = await getEncryptionKey({
-      password,
-      retryCount: 5,
-    });
-    const encryptedFiles = await new Promise<string[]>((resolve) => {
-      requestIdleCallback(async () => {
-        const encryptedFiles = await Promise.all(
-          files.map(async (file) => {
-            const base64File = await getBase64FromFile(file);
-            const encryptedBase64File = await aesEncrypter.hash(
-              base64File,
-              hashKey
-            );
-            return encryptedBase64File;
-          })
-        );
-        resolve(encryptedFiles);
-        setPercentage(100);
-        setMessage(t("encrypt_finished_message"));
+  const serverEncrypt = useCallback(
+    async (retryCount: number): Promise<EncryptResult> => {
+      setPercentage(0);
+      const { encryptionId, hashKey } = await getEncryptionKey({
+        password,
+        retryCount,
       });
-    });
+      const encryptedFiles = await new Promise<string[]>((resolve) => {
+        requestIdleCallback(async () => {
+          const encryptedFiles = await Promise.all(
+            files.map(async (file) => {
+              const base64File = await getBase64FromFile(file);
+              const encryptedBase64File = await aesEncrypter.hash(
+                base64File,
+                hashKey
+              );
+              return encryptedBase64File;
+            })
+          );
+          resolve(encryptedFiles);
+          setPercentage(100);
+          setMessage(t("encrypt_finished_message"));
+        });
+      });
 
-    return {
-      type: SERVER_ENCRYPT_TYPE,
-      encryptionId,
-      encryptedFiles,
-    };
-  }, [files, password, t]);
+      return {
+        type: SERVER_ENCRYPT_TYPE,
+        encryptionId,
+        encryptedFiles,
+      };
+    },
+    [files, password, t]
+  );
 
   return {
     clientEncrypt,

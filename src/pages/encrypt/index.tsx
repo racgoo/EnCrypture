@@ -76,7 +76,9 @@ function EncryptPage() {
       setEncryptFinished(false);
     });
     const fileNames = files.map((file) => file.name);
-    const { type, encryptionId, encryptedFiles } = await serverEncrypt();
+    const { type, encryptionId, encryptedFiles } = await serverEncrypt(
+      retryCount
+    );
     flushSync(() => {
       setEncryptionType(type);
       setEncryptionId(encryptionId);
