@@ -1,10 +1,12 @@
 import type { LangType } from "@shares/locale";
 import { localeTable } from "./locale";
+import type { EncryptionType } from "@features/encrypt/type";
 
 // const TARGET_ORIGIN = "http://localhost:5173";
 const TARGET_ORIGIN = window.location.origin;
 const DECRYPT_PATH = "decrypt";
 const ENCRYPTED_DATA_READY_TYPE = "ENCRYPTED_DATA_READY";
+const ENCRYPTION_META_DATA = "ENCRYPTION_META_DATA";
 const ENCRYPTED_DATA_MESSAGE_TYPE = "ENCRYPTED_DATA_MESSAGE";
 const ENCRYPTED_DATA_DONE_TYPE = "ENCRYPTED_DATA_DONE";
 
@@ -13,7 +15,9 @@ const ENCRYPTED_DATA_TYPE = "ENCRYPTED_DATA";
 function getRedirectionHtmlTemplete(
   encryptedFiles: string[],
   encryptedFileNames: string[],
-  lang: LangType
+  lang: LangType,
+  encryptionId: number | null,
+  encryptionType: EncryptionType
 ) {
   const redirectionHtmlTemplete = `
       <!DOCTYPE html>
@@ -135,12 +139,13 @@ function getRedirectionHtmlTemplete(
         </div>
         <script>
           // encryptedFiles는 파일별 암호화 데이터 배열임
-          const encryptedFiles = ${JSON.stringify(encryptedFiles, null, 2)};
-          const encryptedFileNames = ${JSON.stringify(
-            encryptedFileNames,
-            null,
-            2
-          )};
+          const encryptionMetaData = ${JSON.stringify({
+            encryptionId,
+            encryptionType,
+          })};
+          const encryptedFiles = ${JSON.stringify(encryptedFiles)};
+          const encryptedFileNames = ${JSON.stringify(encryptedFileNames)};
+
           document.getElementById('sendBtn').onclick = function() {
             const targetOrigin = '${TARGET_ORIGIN}';
             const newWindow = window.open(targetOrigin + '/${lang}/${DECRYPT_PATH}', '_blank');
@@ -159,6 +164,10 @@ function getRedirectionHtmlTemplete(
             function sendFiles() {
               if (!newWindow || newWindow.closed) return;
               try {
+                newWindow.postMessage({
+                  type: '${ENCRYPTION_META_DATA}',
+                  data: encryptionMetaData,
+                }, targetOrigin);
                 const allChunkCount = encryptedFiles.reduce((acc, file) => acc + Math.ceil(file.length / 1000), 0);
                 encryptedFiles.forEach((file, idx) => {
                   // 파일을 1000자씩 분할
@@ -212,4 +221,5 @@ export {
   ENCRYPTED_DATA_DONE_TYPE,
   ENCRYPTED_DATA_MESSAGE_TYPE,
   ENCRYPTED_DATA_READY_TYPE,
+  ENCRYPTION_META_DATA,
 };

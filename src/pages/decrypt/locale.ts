@@ -51,6 +51,18 @@ const localeTable = {
     ko: "다운로드",
     en: "Download",
   },
+  wrong_password_message: {
+    ko: "비밀번호가 일치하지 않습니다.",
+    en: "The password does not match.",
+  },
+  too_many_attempts_message: {
+    ko: "비밀번호 입력 시도 횟수를 초과했습니다.",
+    en: "The number of password input attempts has been exceeded.",
+  },
+  retry_count_message: {
+    ko: "남은 시도 횟수: ",
+    en: "Remaining attempts: ",
+  },
 } as const;
 
 export { localeTable };

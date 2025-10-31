@@ -32,3 +32,15 @@ body {
 button {
   cursor: pointer;
 }
+
+/* ant design input number spin button 제거 */
+/* Chrome, Safari, Edge, Opera */
+.no-spin input::-webkit-outer-spin-button,
+.no-spin input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* Firefox */
+.no-spin input[type="number"] {
+  -moz-appearance: textfield;
+}

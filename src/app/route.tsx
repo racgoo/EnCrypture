@@ -1,10 +1,13 @@
+import { DashboardPage } from "@pages/dashboard";
 import { DecryptPage } from "@pages/decrypt";
 import { EncryptPage } from "@pages/encrypt";
 import { HomePage } from "@pages/home";
+import { LogoutPage } from "@pages/logout";
 import MobileBlockPage from "@pages/mobile";
 import NotFoundPage from "@pages/notFound";
+import { ProfilePage } from "@pages/profile";
+import { SignInPage } from "@pages/signIn";
 import { getDefaultLocalePath, langs, type LangType } from "@shares/locale";
-import isMobile from "is-mobile";
 import {
   createBrowserRouter,
   redirect,
@@ -43,21 +46,41 @@ const router = createBrowserRouter([
           if (!validation) {
             return redirect(`/${params.lang}/not-found`);
           }
-          if (isMobile()) {
-            return redirect(`/${params.lang}/mobile-not-supported`);
-          }
+          // if (isMobile()) {
+          //   return redirect(`/${params.lang}/mobile-not-supported`);
+          // }
         },
         element: <EncryptPage />,
       },
 
       {
         path: "decrypt",
-        loader: ({ params }) => {
-          if (isMobile()) {
-            return redirect(`/${params.lang}/mobile-not-supported`);
-          }
-        },
+        // loader: ({ params }) => {
+        // if (isMobile()) {
+        //   return redirect(`/${params.lang}/mobile-not-supported`);
+        // }
+        // },
         element: <DecryptPage />,
+      },
+
+      {
+        path: "sign-in",
+        element: <SignInPage />,
+      },
+
+      {
+        path: "logout",
+        element: <LogoutPage />,
+      },
+
+      {
+        path: "profile",
+        element: <ProfilePage />,
+      },
+
+      {
+        path: "dashboard",
+        element: <DashboardPage />,
       },
 
       {
@@ -69,7 +92,6 @@ const router = createBrowserRouter([
         path: "not-found",
         element: <NotFoundPage />,
       },
-
       {
         path: "*",
         element: <NotFoundPage />,

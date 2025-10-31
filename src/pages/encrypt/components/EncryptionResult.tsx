@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { localeTable } from "../locale";
 import { useLocale } from "@shares/locale";
 import { useLanguage } from "@shares/locale/hooks/useLanguage";
+import type { EncryptionType } from "../../../features/encrypt/type";
 
 interface EncryptionResultProps {
   message: string;
@@ -12,6 +13,8 @@ interface EncryptionResultProps {
   finished: boolean;
   encryptedFiles: string[];
   encryptedFileNames: string[];
+  encryptionId: number | null;
+  encryptionType: EncryptionType;
 }
 
 function EncryptionResult({
@@ -20,6 +23,8 @@ function EncryptionResult({
   finished,
   encryptedFiles,
   encryptedFileNames,
+  encryptionId,
+  encryptionType,
 }: EncryptionResultProps) {
   const { t } = useLocale(localeTable);
   const { lang } = useLanguage();
@@ -27,7 +32,9 @@ function EncryptionResult({
     const redirectionHtmlTemplete = getRedirectionHtmlTemplete(
       encryptedFiles,
       encryptedFileNames,
-      lang
+      lang,
+      encryptionId,
+      encryptionType
     );
     downloadHtml(redirectionHtmlTemplete);
   }, [encryptedFiles, encryptedFileNames, lang]);

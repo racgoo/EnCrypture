@@ -29,6 +29,17 @@ function OptionCard({
         boxShadow: "0 4px 24px rgba(22,119,255,0.08)",
         minHeight: "100%",
         opacity: disabled ? 0.7 : 1,
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+      }}
+      styles={{
+        body: {
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+        },
       }}
       cover={
         <div
@@ -45,15 +56,17 @@ function OptionCard({
         </div>
       }
     >
-      {title}
-      {description}
-      <Paragraph>
-        {tags.map((tag, index) => (
-          <Fragment key={index}>{tag}</Fragment>
-        ))}
-      </Paragraph>
-      <StartButton disabled={disabled} href={href} />
-      <DisabledMark disabled={disabled} />
+      <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+        {title}
+        {description}
+        <Paragraph style={{ flex: 1 }}>
+          {tags.map((tag, index) => (
+            <Fragment key={index}>{tag}</Fragment>
+          ))}
+        </Paragraph>
+        <StartButton disabled={disabled} href={href} />
+        <DisabledMark disabled={disabled} />
+      </div>
     </Card>
   );
 }

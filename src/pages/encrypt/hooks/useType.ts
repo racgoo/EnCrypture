@@ -1,10 +1,11 @@
-import { useNavigate, useParams } from "react-router-dom";
-
-type EncryptionType = "client" | "server";
+import { useLocaleNavigate } from "@shares/locale";
+import { useParams } from "react-router-dom";
+import type { EncryptionType } from "../../../features/encrypt/type";
 
 function useType() {
   const { type = "client" } = useParams<{ type: EncryptionType }>();
-  const navigate = useNavigate();
+
+  const navigate = useLocaleNavigate();
 
   const changeType = (targetType: EncryptionType) => {
     navigate(`/encrypt/${targetType}`, {

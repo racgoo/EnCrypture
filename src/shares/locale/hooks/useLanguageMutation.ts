@@ -10,7 +10,7 @@ function useLanguageMutation() {
       const splitedPath = path.split("/");
       splitedPath[1] = lang;
       const newPath = splitedPath.join("/");
-      navigate(newPath);
+      navigate(newPath, { replace: true });
     },
     [navigate]
   );

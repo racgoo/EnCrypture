@@ -1,7 +1,7 @@
 import { LockOutlined } from "@ant-design/icons";
 import { useLocale } from "@shares/locale";
 import { Progress, Space, Typography } from "antd";
-import { Fragment, useMemo } from "react";
+import { Fragment, useCallback, useMemo } from "react";
 import { DataLoading } from "./components/DataLoading";
 import { DecryptButton } from "./components/DecryptButton";
 import { DecryptCard } from "./components/DecryptCard";
@@ -11,6 +11,10 @@ import { PasswordInput } from "./components/PasswordInput";
 import { useDecrypt } from "./hooks/useDecrypt";
 import { useLoadData } from "./hooks/useLoadData";
 import { localeTable } from "./locale";
+import {
+  CLIENT_ENCRYPT_TYPE,
+  SERVER_ENCRYPT_TYPE,
+} from "@pages/encrypt/constants";
 
 const { Title, Text } = Typography;
 
@@ -25,19 +29,27 @@ function DecryptPage() {
     chunkCount,
     allChunkCount,
     invalidNavigation,
+    encryptionMetaData,
   } = useLoadData();
+
   const {
     password,
     setPassword,
-    decrypt,
+    clientDecrypt,
+    serverDecrypt,
     files,
     decryptLoading,
     decryptPercentage,
   } = useDecrypt(encryptedFiles, fileNames);
 
-  const handleDecrypt = () => {
-    decrypt();
-  };
+  const handleDecrypt = useCallback(() => {
+    if (encryptionMetaData.encryptionType === CLIENT_ENCRYPT_TYPE) {
+      clientDecrypt();
+    }
+    if (encryptionMetaData.encryptionType === SERVER_ENCRYPT_TYPE) {
+      serverDecrypt(encryptionMetaData.encryptionId);
+    }
+  }, [clientDecrypt, serverDecrypt, encryptionMetaData]);
 
   const inputLoading = useMemo(() => {
     return dataLoading || !dataLoaded || decryptLoading;

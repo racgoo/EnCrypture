@@ -1,7 +1,10 @@
+import type { EncryptionType } from "@features/encrypt";
+import { CLIENT_ENCRYPT_TYPE } from "@pages/encrypt/constants";
 import {
   ENCRYPTED_DATA_DONE_TYPE,
   ENCRYPTED_DATA_MESSAGE_TYPE,
   ENCRYPTED_DATA_READY_TYPE,
+  ENCRYPTION_META_DATA,
 } from "@shares/templete/redirectionTemplete";
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 
@@ -21,6 +24,13 @@ function useLoadData() {
   const [chunkCount, setChunkCount] = useState(0);
   const [allChunkCount, setAllChunkCount] = useState(Infinity);
   const [invalidNavigation, setInvalidNavigation] = useState(false);
+  const [encryptionMetaData, setEncryptionMetaData] = useState<{
+    encryptionId: number;
+    encryptionType: EncryptionType;
+  }>({
+    encryptionId: 0,
+    encryptionType: CLIENT_ENCRYPT_TYPE,
+  });
 
   // 파일별 청크 정보 저장 (index: ChunkInfo)
   const chunkMap = useRef<Record<number, ChunkInfo>>({});
@@ -29,6 +39,11 @@ function useLoadData() {
 
   const handleMessage = useCallback(
     (event: MessageEvent) => {
+      if (event.data.type === ENCRYPTION_META_DATA) {
+        setEncryptionMetaData(event.data.data);
+        return;
+      }
+
       // 메시지 타입 확인
       if (event.data.type === ENCRYPTED_DATA_MESSAGE_TYPE) {
         const {
@@ -136,6 +151,7 @@ function useLoadData() {
     chunkCount,
     allChunkCount,
     invalidNavigation,
+    encryptionMetaData,
   };
 }
 
