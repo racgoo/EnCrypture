@@ -10,6 +10,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      "@app": "/src/app",
       "@entities": "/src/entities",
       "@features": "/src/features",
       "@pages": "/src/pages",
