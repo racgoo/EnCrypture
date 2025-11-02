@@ -39,6 +39,26 @@ const localeTable = {
     ko: "소개",
     en: "Bio",
   },
+  profile_delete_account: {
+    ko: "탈퇴하기",
+    en: "Delete Account",
+  },
+  profile_delete_confirm_title: {
+    ko: "정말 탈퇴하시겠습니까?",
+    en: "Are you sure you want to delete your account?",
+  },
+  profile_delete_confirm_content: {
+    ko: "탈퇴하면 모든 데이터가 삭제되며 복구할 수 없습니다.",
+    en: "All your data will be deleted and cannot be recovered.",
+  },
+  profile_delete_confirm_ok: {
+    ko: "탈퇴하기",
+    en: "Delete",
+  },
+  profile_delete_confirm_cancel: {
+    ko: "취소",
+    en: "Cancel",
+  },
 } as const;
 
 export { localeTable };

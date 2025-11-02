@@ -9,7 +9,7 @@ async function getUser(): Promise<User | null> {
       credentials: "include",
     });
     if (!response.ok) {
-      return null;
+      throw new Error();
     }
     return response.json();
   } catch (error) {
@@ -17,4 +17,15 @@ async function getUser(): Promise<User | null> {
   }
 }
 
-export { getUser };
+async function deleteUser(): Promise<Response> {
+  const response = await fetch(`${baseURL}/user`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+  if (!response.ok) {
+    throw new Error();
+  }
+  return response;
+}
+
+export { getUser, deleteUser };

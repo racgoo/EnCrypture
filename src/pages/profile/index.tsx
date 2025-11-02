@@ -1,24 +1,29 @@
-import { useState } from "react";
+import { MailOutlined, UserOutlined } from "@ant-design/icons";
+import { useUser } from "@features/user";
+
+import { useLocale, useLocaleNavigate } from "@shares/locale";
 import {
   Avatar,
-  Card,
-  Typography,
   Button,
-  Space,
-  Divider,
+  Card,
   Descriptions,
-  Tag,
-  message,
+  Modal,
+  Space,
+  Typography,
 } from "antd";
-import { EditOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
-import { useLocale } from "@shares/locale";
+import dayjs from "dayjs";
+import { useCallback, useState } from "react";
 import { ProfileLayout } from "./components/ProfileLayout";
 import { localeTable } from "./locale";
 
 const { Title, Text } = Typography;
 
 function ProfilePage() {
+  const { user, unRegister } = useUser();
+  const navigate = useLocaleNavigate();
   const { t } = useLocale(localeTable);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // 필요한 데이터 useState로
   const [profile, setProfile] = useState({
@@ -30,9 +35,21 @@ function ProfilePage() {
     bio: "Hello! Welcome to my profile.",
   });
 
-  const handleEditProfile = () => {
-    message.info(t("profile_edit_click") || "Edit profile 클릭됨!");
-  };
+  const handleDeleteAccount = useCallback(async () => {
+    setIsDeleting(true);
+    try {
+      await unRegister();
+      navigate("/");
+    } finally {
+      setIsDeleting(false);
+      setDeleteModalOpen(false);
+    }
+  }, [unRegister, navigate, t]);
+
+  if (!user) {
+    navigate("/sign-in");
+    return null;
+  }
 
   return (
     <ProfileLayout>
@@ -54,28 +71,12 @@ function ProfilePage() {
               style={{ backgroundColor: "#b6e3ff", marginBottom: 12 }}
             />
             <Title level={3} style={{ marginBottom: 0 }}>
-              {profile.username}
+              {user.name}
             </Title>
             <Text type="secondary">
               <MailOutlined style={{ marginRight: 4 }} />
-              {profile.email}
+              {user.email}
             </Text>
-
-            <Tag
-              color={profile.status === "active" ? "success" : "default"}
-              style={{ marginTop: 8 }}
-            >
-              {profile.status === "active"
-                ? t("profile_active") || "Active"
-                : t("profile_inactive") || "Inactive"}
-            </Tag>
-            <Button
-              icon={<EditOutlined />}
-              type="primary"
-              onClick={handleEditProfile}
-            >
-              {t("profile_edit") || "프로필 편집"}
-            </Button>
           </Space>
         </Card>
         <Card
@@ -84,21 +85,46 @@ function ProfilePage() {
           bodyStyle={{ padding: 24 }}
         >
           <Descriptions column={1} size="middle">
-            <Descriptions.Item label={t("profile_username") || "닉네임"}>
-              {profile.username}
-            </Descriptions.Item>
             <Descriptions.Item label={t("profile_email") || "이메일"}>
-              {profile.email}
+              {user.email}
             </Descriptions.Item>
             <Descriptions.Item label={t("profile_join_date") || "가입일"}>
-              {profile.joinDate}
-            </Descriptions.Item>
-            <Descriptions.Item label={t("profile_bio") || "소개"}>
-              {profile.bio}
+              {dayjs(user.createdAt).format("YYYY-MM-DD")}
             </Descriptions.Item>
           </Descriptions>
         </Card>
+        <Card style={{ width: "100%", borderColor: "#ff4d4f" }} bordered>
+          <Space direction="vertical" style={{ width: "100%" }}>
+            <Text type="danger" strong>
+              {t("profile_delete_account")}
+            </Text>
+            <Text type="secondary" style={{ fontSize: 12 }}>
+              {t("profile_delete_confirm_content")}
+            </Text>
+            <Button
+              type="primary"
+              danger
+              onClick={() => setDeleteModalOpen(true)}
+              style={{ width: "100%" }}
+            >
+              {t("profile_delete_account")}
+            </Button>
+          </Space>
+        </Card>
       </Space>
+
+      <Modal
+        title={t("profile_delete_confirm_title")}
+        open={deleteModalOpen}
+        onOk={handleDeleteAccount}
+        onCancel={() => setDeleteModalOpen(false)}
+        okText={t("profile_delete_confirm_ok")}
+        cancelText={t("profile_delete_confirm_cancel")}
+        okButtonProps={{ danger: true, loading: isDeleting }}
+        confirmLoading={isDeleting}
+      >
+        <p>{t("profile_delete_confirm_content")}</p>
+      </Modal>
     </ProfileLayout>
   );
 }

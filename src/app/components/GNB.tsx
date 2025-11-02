@@ -83,11 +83,10 @@ function GNB() {
   const navigate = useLocaleNavigate();
   const { t } = useLocale(localeTable);
   const { changeLanguage } = useLanguageMutation();
+
   const { lang } = useLanguage();
   const [drawerOpen, setDrawerOpen] = useState(false);
-
-  const signedIn = useMemo(() => user !== null, [user]);
-
+  console.log(user);
   const handleLangChange = (value: LangType) => {
     changeLanguage(value);
   };
@@ -190,7 +189,7 @@ function GNB() {
 
   const authMenu = useMemo(
     () =>
-      signedIn ? (
+      user ? (
         <Menu
           selectable={false}
           style={{
@@ -235,7 +234,7 @@ function GNB() {
           </Menu.Item>
         </Menu>
       ),
-    [t, signedIn]
+    [t, user]
   );
 
   const userMenu = useMemo(
@@ -271,7 +270,7 @@ function GNB() {
         </Menu.Item>
       </Menu>
     ),
-    [t, signedIn]
+    [t, user]
   );
 
   // 헤더 오른쪽: 햄버거만
@@ -422,7 +421,7 @@ function GNB() {
               {navMenu}
             </div>
 
-            {signedIn && (
+            {user && (
               <div
                 style={{
                   padding: "18px 16px 0 16px",
