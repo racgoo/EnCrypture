@@ -367,15 +367,17 @@ function GNB() {
             placement="right"
             onClose={() => setDrawerOpen(false)}
             open={drawerOpen}
-            bodyStyle={{
-              padding: 0,
-              background: "#181818",
-              minHeight: "100vh",
-            }}
-            headerStyle={{
-              background: "#181818",
-              color: "#fff",
-              borderBottom: "1px solid #222",
+            styles={{
+              header: {
+                background: "#181818",
+                color: "#fff",
+                borderBottom: "1px solid #222",
+              },
+              body: {
+                padding: 0,
+                background: "#181818",
+                minHeight: "100vh",
+              },
             }}
             width={250}
             closeIcon={
@@ -402,6 +404,7 @@ function GNB() {
                   fontSize: 15,
                   display: "flex",
                   alignItems: "center",
+                  padding: 0,
                 }}
               >
                 <GlobalOutlined style={{ marginRight: 8, fontSize: 18 }} />
