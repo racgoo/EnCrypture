@@ -190,7 +190,7 @@ function GNB() {
 
   const authMenu = useMemo(
     () =>
-      user ? (
+      signedIn ? (
         <Menu
           selectable={false}
           style={{

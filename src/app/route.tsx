@@ -30,6 +30,7 @@ const router = createBrowserRouter([
         return redirect(`/${defaultLocale}/not-found`);
       }
     },
+    errorElement: <div>Error</div>,
     element: <AppLayout />,
     children: [
       {
