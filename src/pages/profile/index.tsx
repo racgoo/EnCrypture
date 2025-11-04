@@ -26,7 +26,7 @@ function ProfilePage() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   // 필요한 데이터 useState로
-  const [profile, setProfile] = useState({
+  const [profile, _] = useState({
     avatar: "",
     username: "EncryptureUser",
     email: "user@example.com",

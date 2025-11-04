@@ -28,7 +28,7 @@ function useUser(): {
       message.success(t("profile_delete_success"));
       queryClient.invalidateQueries({ queryKey: USER_QUERY_KEY });
     },
-    onError: (error) => {
+    onError: (_) => {
       message.error(t("profile_delete_error"));
     },
   });
