@@ -14,6 +14,7 @@
   "dependencies": {
     "@ant-design/icons": "^6.1.0",
     "@noble/hashes": "^2.0.1",
+    "@racgoo/reactive-kit": "^1.0.2",
     "@tanstack/react-query": "^5.90.5",
     "antd": "^5.27.6",
     "crypto-js": "^4.2.0",
