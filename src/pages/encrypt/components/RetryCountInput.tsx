@@ -8,17 +8,18 @@ import { useType } from "../hooks/useType";
 import { localeTable } from "../locale";
 
 import { Typography } from "antd";
+import { useReactiveState, type ReactiveRef } from "@racgoo/reactive-kit/react";
 
 const { Text } = Typography;
 
 interface RetryCountInputProps {
-  retryCount: number;
-  setRetryCount: (retryCount: number) => void;
+  retryCountRef: ReactiveRef<number>;
 }
 
-function RetryCountInput({ retryCount, setRetryCount }: RetryCountInputProps) {
+function RetryCountInput({ retryCountRef }: RetryCountInputProps) {
   const { type } = useType();
   const { t } = useLocale(localeTable);
+  const retryCountState = useReactiveState(retryCountRef);
   const disabled = useMemo(() => {
     return type === CLIENT_ENCRYPT_TYPE;
   }, [type]);
@@ -45,10 +46,10 @@ function RetryCountInput({ retryCount, setRetryCount }: RetryCountInputProps) {
             size="large"
             placeholder={t("retry_count_placeholder")}
             prefix={<RetweetOutlined />}
-            value={retryCount}
+            value={retryCountState}
             type="number"
             min={1}
-            onChange={(e) => setRetryCount(Number(e.target.value))}
+            onChange={(e) => (retryCountRef.current = Number(e.target.value))}
             style={{ MozAppearance: "textfield" }}
             onWheel={(e) => e.currentTarget.blur()}
             inputMode="numeric"

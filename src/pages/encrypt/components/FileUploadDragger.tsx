@@ -9,15 +9,15 @@ const { Text } = Typography;
 
 interface FileUploadDraggerProps {
   files: RcFile[];
-  handleAddFile: (file: RcFile) => RcFile | string;
-  handleDeleteFile: (file: RcFile) => void;
+  addFile: (file: RcFile) => RcFile | string;
+  deleteFile: (file: RcFile) => void;
   disabled: boolean;
 }
 
 function FileUploadDragger({
   files,
-  handleAddFile,
-  handleDeleteFile,
+  addFile,
+  deleteFile,
   disabled,
 }: FileUploadDraggerProps) {
   const { t } = useLocale(localeTable);
@@ -25,10 +25,10 @@ function FileUploadDragger({
     (info: UploadChangeParam<UploadFile>) => {
       const { file } = info;
       if (file.status === "removed") {
-        handleDeleteFile(file as RcFile);
+        deleteFile(file as RcFile);
       }
     },
-    [handleDeleteFile]
+    [deleteFile]
   );
 
   return (
@@ -36,7 +36,7 @@ function FileUploadDragger({
       // multiple
       disabled={disabled}
       fileList={files}
-      beforeUpload={handleAddFile}
+      beforeUpload={addFile}
       onChange={handleChange}
       accept="*"
       style={{

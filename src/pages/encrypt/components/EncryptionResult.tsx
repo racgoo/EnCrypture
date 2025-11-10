@@ -5,41 +5,42 @@ import { useCallback } from "react";
 import { localeTable } from "../locale";
 import { useLocale } from "@shares/locale";
 import { useLanguage } from "@shares/locale/hooks/useLanguage";
-import type { EncryptionType } from "../../../features/encrypt/type";
+import type { EncryptionResultType } from "..";
+import { useReactiveState, type ReactiveRef } from "@racgoo/reactive-kit/react";
 
 interface EncryptionResultProps {
   message: string;
   percentage: number;
   finished: boolean;
-  encryptedFiles: string[];
-  encryptedFileNames: string[];
-  encryptionId: number | null;
-  encryptionType: EncryptionType;
+  done: boolean;
+  encryptionResultRef: ReactiveRef<EncryptionResultType>;
 }
 
 function EncryptionResult({
   message,
   percentage,
   finished,
-  encryptedFiles,
-  encryptedFileNames,
-  encryptionId,
-  encryptionType,
+  done,
+  encryptionResultRef,
 }: EncryptionResultProps) {
   const { t } = useLocale(localeTable);
+  const encryptionResultState = useReactiveState(encryptionResultRef);
   const { lang } = useLanguage();
+
   const handleDownloadEncryptedHtml = useCallback(() => {
     const redirectionHtmlTemplete = getRedirectionHtmlTemplete(
-      encryptedFiles,
-      encryptedFileNames,
+      encryptionResultState.files,
+      encryptionResultState.fileNames,
       lang,
-      encryptionId,
-      encryptionType
+      encryptionResultState.id,
+      encryptionResultState.type
     );
     downloadHtml(redirectionHtmlTemplete);
-  }, [encryptedFiles, encryptedFileNames, lang]);
+  }, [encryptionResultState, lang]);
 
-  if (!message) return null;
+  if (!done) {
+    return null;
+  }
 
   return (
     <div

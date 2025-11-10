@@ -83,10 +83,9 @@ function GNB() {
   const navigate = useLocaleNavigate();
   const { t } = useLocale(localeTable);
   const { changeLanguage } = useLanguageMutation();
-
   const { lang } = useLanguage();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  console.log(user);
+
   const handleLangChange = (value: LangType) => {
     changeLanguage(value);
   };

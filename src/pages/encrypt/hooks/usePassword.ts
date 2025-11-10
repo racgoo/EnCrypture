@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { localeTable } from "../locale";
 import { useLocale } from "@shares/locale";
 
@@ -25,11 +25,19 @@ function usePassword() {
     return null;
   }, [password, t]);
 
+  const changePassword = useCallback((password: string) => {
+    setPassword(password);
+  }, []);
+
+  const clearPassword = useCallback(() => {
+    setPassword("");
+  }, []);
+
   const valid = useMemo(() => {
     return error === null && password.length > 0;
   }, [error, password]);
 
-  return { password, setPassword, error, valid };
+  return { password, changePassword, clearPassword, error, valid };
 }
 
 export { usePassword };

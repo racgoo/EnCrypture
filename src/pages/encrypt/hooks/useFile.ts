@@ -9,7 +9,7 @@ function useFile() {
   const [files, setFiles] = useState<RcFile[]>([]);
   const { t } = useLocale(localeTable);
 
-  const handleAddFile = useCallback(
+  const addFile = useCallback(
     (file: RcFile) => {
       const nextFiles = [...files, file];
 
@@ -28,13 +28,17 @@ function useFile() {
     [files, t]
   );
 
-  const handleDeleteFile = useCallback(
+  const deleteFile = useCallback(
     (file: RcFile) => {
       setFiles(files.filter((f) => f.uid !== file.uid));
     },
     [files]
   );
 
-  return { files, handleAddFile, handleDeleteFile };
+  const clearFiles = useCallback(() => {
+    setFiles([]);
+  }, []);
+
+  return { files, addFile, deleteFile, clearFiles };
 }
 export { useFile };

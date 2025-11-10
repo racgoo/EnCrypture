@@ -1,99 +1,149 @@
+import {
+  useReactiveState,
+  useReactiveSubRef,
+} from "@racgoo/reactive-kit/react";
+import { useLocale } from "@shares/locale";
 import { Card, Space, Typography } from "antd";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { flushSync } from "react-dom";
+import { motion } from "motion/react";
+import { useCallback, useEffect, useMemo } from "react";
+import type { EncryptionType } from "../../features/encrypt/type";
 import { EncryptButton } from "./components/EncryptButton";
+import { EncryptionCaution } from "./components/EncryptionCaution";
 import { EncryptionResult } from "./components/EncryptionResult";
 import { EncryptLayout } from "./components/EncryptLayout";
 import { FileUploadDragger } from "./components/FileUploadDragger";
 import { PasswordInput } from "./components/PasswordInput";
+import { RetryCountInput } from "./components/RetryCountInput";
 import { TypeDescription } from "./components/TypeDescription";
 import { TypeSelect } from "./components/TypeSelect";
 import { CLIENT_ENCRYPT_TYPE, MAX_FILE_SIZE_STRING } from "./constants";
 import { useEncrypt } from "./hooks/useEncrypt";
+import { useEncryptionConfig } from "./hooks/useEncryptionConfig";
+import { useEncryptionResult } from "./hooks/useEncryptionResult";
 import { useFile } from "./hooks/useFile";
 import { usePassword } from "./hooks/usePassword";
-import { localeTable } from "./locale";
-import { useLocale } from "@shares/locale";
 import { useType } from "./hooks/useType";
-import { motion } from "motion/react";
-
-import type { EncryptionType } from "../../features/encrypt/type";
-import { RetryCountInput } from "./components/RetryCountInput";
-import { EncryptionCaution } from "./components/EncryptionCaution";
-
+import { localeTable } from "./locale";
 const { Title, Text } = Typography;
 
-const DEFAULT_RETRY_COUNT = 5;
+export type EncryptionResultType = {
+  type: EncryptionType;
+  id: number | null;
+  files: string[];
+  fileNames: string[];
+};
 
+export type EncryptionConfigType = {
+  loading: boolean;
+  finished: boolean;
+  retryCount: number;
+};
 function EncryptPage() {
   const { t } = useLocale(localeTable);
   const { type } = useType();
-  const { files, handleAddFile, handleDeleteFile } = useFile();
-  const { password, setPassword, error, valid } = usePassword();
-  const { clientEncrypt, serverEncrypt, percentage, message } = useEncrypt({
+  const { files, addFile, deleteFile, clearFiles } = useFile();
+  const { password, changePassword, clearPassword, error, valid } =
+    usePassword();
+  const {
+    clientEncrypt,
+    serverEncrypt,
+    percentage,
+    message,
+    done,
+    clearEncryption,
+  } = useEncrypt({
     files,
     password,
   });
 
-  const [encryptLoading, setEncryptLoading] = useState(false);
-  const [encryptFinished, setEncryptFinished] = useState(false);
-  const [encryptedFiles, setEncryptedFiles] = useState<string[]>([]);
-  const [encryptedFileNames, setEncryptedFileNames] = useState<string[]>([]);
-  const [retryCount, setRetryCount] = useState(DEFAULT_RETRY_COUNT);
+  const { encryptionConfigRef, clearEncryptionConfig, updateEncryptionConfig } =
+    useEncryptionConfig();
+  const { encryptionResultRef, clearEncryptionResult, updateEncryptionResult } =
+    useEncryptionResult();
 
-  const [encryptionId, setEncryptionId] = useState<number | null>(null);
-  const [encryptionType, setEncryptionType] = useState<EncryptionType>(type);
-
-  const initializeInput = useCallback(async () => {
-    setPassword("");
-    setEncryptLoading(false);
-    setEncryptFinished(false);
-    setEncryptedFiles([]);
-    setEncryptedFileNames([]);
-    setRetryCount(DEFAULT_RETRY_COUNT);
-  }, []);
-
-  const handleClientEncrypt = useCallback(async () => {
-    flushSync(() => {
-      setEncryptLoading(true);
-      setEncryptFinished(false);
-    });
-    const fileNames = files.map((file) => file.name);
-    const { type, encryptionId, encryptedFiles } = await clientEncrypt();
-    flushSync(() => {
-      setEncryptionType(type);
-      setEncryptionId(encryptionId);
-      setEncryptedFiles(encryptedFiles);
-      setEncryptedFileNames(fileNames);
-      setEncryptLoading(false);
-      setEncryptFinished(true);
-    });
-  }, [clientEncrypt, files]);
-
-  const handleSeverEncrypt = useCallback(async () => {
-    flushSync(() => {
-      setEncryptLoading(true);
-      setEncryptFinished(false);
-    });
-    const fileNames = files.map((file) => file.name);
-    const { type, encryptionId, encryptedFiles } = await serverEncrypt(
-      retryCount
-    );
-    flushSync(() => {
-      setEncryptionType(type);
-      setEncryptionId(encryptionId);
-      setEncryptedFiles(encryptedFiles);
-      setEncryptedFileNames(fileNames);
-      setEncryptLoading(false);
-      setEncryptFinished(true);
-    });
-  }, [serverEncrypt, files]);
-
-  const buttonDisabled = useMemo(
-    () => files.length === 0 || valid === false || encryptLoading,
-    [files, valid, encryptLoading]
+  const loadingRef = useReactiveSubRef(
+    encryptionConfigRef,
+    (ref) => ref.current.loading
   );
 
+  const finishedRef = useReactiveSubRef(
+    encryptionConfigRef,
+    (ref) => ref.current.finished
+  );
+
+  const retryCountRef = useReactiveSubRef(
+    encryptionConfigRef,
+    (ref) => ref.current.retryCount
+  );
+
+  const initializeInput = useCallback(() => {
+    clearPassword();
+    // reset encryption config
+    clearEncryptionConfig();
+    // reset encryption result
+    clearEncryptionResult();
+    // reset files
+    clearEncryption();
+    // clear files
+    clearFiles();
+  }, []);
+
+  // reactive state for loading
+  const loadingState = useReactiveState(loadingRef);
+  // reactive state for finished
+  const finishedState = useReactiveState(finishedRef);
+
+  // update encryption data(result and config) after encrypt
+  const updateEncryptionData = useCallback(
+    (
+      type: EncryptionType,
+      encryptionId: number | null,
+      encryptedFiles: string[],
+      fileNames: string[]
+    ) => {
+      // update encryption result
+      updateEncryptionResult({
+        type: type,
+        id: encryptionId,
+        files: encryptedFiles,
+        fileNames: fileNames,
+      });
+      // update encryption config
+      updateEncryptionConfig({ loading: false, finished: true });
+    },
+    []
+  );
+
+  // handle client encrypt
+  const handleClientEncrypt = useCallback(async () => {
+    updateEncryptionConfig({ loading: true, finished: false });
+    const fileNames = files.map((file) => file.name);
+    // encrypt files
+    const { type, encryptionId, encryptedFiles } = await clientEncrypt();
+    updateEncryptionData(type, encryptionId, encryptedFiles, fileNames);
+  }, [clientEncrypt, files]);
+
+  // handle server encrypt
+  const handleSeverEncrypt = useCallback(async () => {
+    updateEncryptionConfig({ loading: true, finished: false });
+    const fileNames = files.map((file) => file.name);
+    // encrypt files
+    const { type, encryptionId, encryptedFiles } = await serverEncrypt(
+      retryCountRef.current
+    );
+    updateEncryptionData(type, encryptionId, encryptedFiles, fileNames);
+  }, [serverEncrypt, files]);
+
+  // button disabled(disable double click)
+  const buttonDisabled = useMemo(
+    () =>
+      files.length === 0 ||
+      valid === false ||
+      encryptionConfigRef.current.loading,
+    [files, valid, loadingState]
+  );
+
+  // handle encrypt(client or server)
   const handleEncrypt = useCallback(() => {
     if (type === "client") {
       handleClientEncrypt();
@@ -102,6 +152,7 @@ function EncryptPage() {
     }
   }, [type, handleClientEncrypt, handleSeverEncrypt]);
 
+  // initialize input when type changes
   useEffect(() => {
     initializeInput();
   }, [type]);
@@ -134,36 +185,29 @@ function EncryptPage() {
             {type === CLIENT_ENCRYPT_TYPE && <EncryptionCaution />}
 
             <FileUploadDragger
-              disabled={encryptLoading}
+              disabled={loadingState}
               files={files}
-              handleAddFile={handleAddFile}
-              handleDeleteFile={handleDeleteFile}
+              addFile={addFile}
+              deleteFile={deleteFile}
             />
 
             <PasswordInput
-              disabled={encryptLoading}
+              disabled={loadingState}
               password={password}
-              setPassword={setPassword}
+              setPassword={changePassword}
               error={error}
               placeholder={t("password_placeholder")}
             />
 
-            <RetryCountInput
-              retryCount={retryCount}
-              setRetryCount={setRetryCount}
-            />
+            <RetryCountInput retryCountRef={retryCountRef} />
 
-            <motion.div layout initial={{ scale: 0 }} animate={{ scale: 1 }}>
-              <EncryptionResult
-                message={message}
-                percentage={percentage}
-                finished={encryptFinished}
-                encryptedFileNames={encryptedFileNames}
-                encryptedFiles={encryptedFiles}
-                encryptionId={encryptionId}
-                encryptionType={encryptionType}
-              />
-            </motion.div>
+            <EncryptionResult
+              message={message}
+              percentage={percentage}
+              finished={finishedState}
+              encryptionResultRef={encryptionResultRef}
+              done={done}
+            />
 
             <EncryptButton
               disabled={buttonDisabled}

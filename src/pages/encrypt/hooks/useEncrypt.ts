@@ -25,8 +25,16 @@ function useEncrypt({ files, password }: UseEncryptProps) {
   const { t } = useLocale(localeTable);
   const [percentage, setPercentage] = useState(0);
   const [message, setMessage] = useState("");
+  const [done, setDone] = useState(false);
+
+  const clearEncryption = useCallback(() => {
+    setDone(false);
+    setPercentage(0);
+    setMessage("");
+  }, []);
 
   const clientEncrypt = useCallback(async (): Promise<EncryptResult> => {
+    setDone(false);
     setPercentage(0);
     setMessage(t("argon2_encrypt_progress_message"));
     const encryptedFiles = await new Promise<string[]>((resolve) => {
@@ -50,6 +58,7 @@ function useEncrypt({ files, password }: UseEncryptProps) {
         resolve(encryptedFiles);
         setPercentage(100);
         setMessage(t("encrypt_finished_message"));
+        setDone(true);
       });
     });
 
@@ -62,6 +71,7 @@ function useEncrypt({ files, password }: UseEncryptProps) {
 
   const serverEncrypt = useCallback(
     async (retryCount: number): Promise<EncryptResult> => {
+      setDone(false);
       setPercentage(0);
       const { encryptionId, hashKey } = await getEncryptionKey({
         password,
@@ -82,6 +92,7 @@ function useEncrypt({ files, password }: UseEncryptProps) {
           resolve(encryptedFiles);
           setPercentage(100);
           setMessage(t("encrypt_finished_message"));
+          setDone(true);
         });
       });
 
@@ -99,6 +110,8 @@ function useEncrypt({ files, password }: UseEncryptProps) {
     serverEncrypt,
     percentage,
     message,
+    done,
+    clearEncryption,
   };
 }
 
