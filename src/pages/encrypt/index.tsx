@@ -41,7 +41,7 @@ export type EncryptionConfigType = {
 function EncryptPage() {
   const { t } = useLocale(localeTable);
   const { type } = useType();
-  const { files, addFile, deleteFile, clearFiles } = useFile();
+  const { fileRef, addFile, deleteFile, clearFiles } = useFile();
   const { password, changePassword, clearPassword, error, valid } =
     usePassword();
   const {
@@ -52,7 +52,7 @@ function EncryptPage() {
     done,
     clearEncryption,
   } = useEncrypt({
-    files,
+    files: fileRef,
     password,
   });
 
@@ -117,30 +117,30 @@ function EncryptPage() {
   // handle client encrypt
   const handleClientEncrypt = useCallback(async () => {
     updateEncryptionConfig({ loading: true, finished: false });
-    const fileNames = files.map((file) => file.name);
+    const fileNames = fileRef.current.map((file) => file.name);
     // encrypt files
     const { type, encryptionId, encryptedFiles } = await clientEncrypt();
     updateEncryptionData(type, encryptionId, encryptedFiles, fileNames);
-  }, [clientEncrypt, files]);
+  }, [clientEncrypt]);
 
   // handle server encrypt
   const handleSeverEncrypt = useCallback(async () => {
     updateEncryptionConfig({ loading: true, finished: false });
-    const fileNames = files.map((file) => file.name);
+    const fileNames = fileRef.current.map((file) => file.name);
     // encrypt files
     const { type, encryptionId, encryptedFiles } = await serverEncrypt(
       retryCountRef.current
     );
     updateEncryptionData(type, encryptionId, encryptedFiles, fileNames);
-  }, [serverEncrypt, files]);
+  }, [serverEncrypt]);
 
   // button disabled(disable double click)
   const buttonDisabled = useMemo(
     () =>
-      files.length === 0 ||
+      fileRef.current.length === 0 ||
       valid === false ||
       encryptionConfigRef.current.loading,
-    [files, valid, loadingState]
+    [valid, loadingState]
   );
 
   // handle encrypt(client or server)
@@ -186,7 +186,7 @@ function EncryptPage() {
 
             <FileUploadDragger
               disabled={loadingState}
-              files={files}
+              fileRef={fileRef}
               addFile={addFile}
               deleteFile={deleteFile}
             />

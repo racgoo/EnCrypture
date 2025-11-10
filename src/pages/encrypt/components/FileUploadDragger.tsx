@@ -4,23 +4,28 @@ import type { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload";
 import { useCallback } from "react";
 import { localeTable } from "../locale";
 import { useLocale } from "@shares/locale";
+import { useReactiveState, type ReactiveRef } from "@racgoo/reactive-kit/react";
 
 const { Text } = Typography;
 
 interface FileUploadDraggerProps {
-  files: RcFile[];
-  addFile: (file: RcFile) => RcFile | string;
+  fileRef: ReactiveRef<RcFile[]>;
+  addFile: (file: RcFile) => File | string;
   deleteFile: (file: RcFile) => void;
   disabled: boolean;
 }
 
 function FileUploadDragger({
-  files,
+  fileRef,
   addFile,
   deleteFile,
   disabled,
 }: FileUploadDraggerProps) {
   const { t } = useLocale(localeTable);
+  // reactive state for files(only rendering)
+  const files = useReactiveState(fileRef);
+
+  // handle file change
   const handleChange = useCallback(
     (info: UploadChangeParam<UploadFile>) => {
       const { file } = info;

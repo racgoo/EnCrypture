@@ -9,9 +9,10 @@ import { getEncryptionKey } from "@features/encrypt";
 
 import { CLIENT_ENCRYPT_TYPE, SERVER_ENCRYPT_TYPE } from "../constants";
 import type { EncryptionType } from "../../../features/encrypt/type";
+import type { ReactiveRef } from "@racgoo/reactive-kit/react";
 
 interface UseEncryptProps {
-  files: File[];
+  files: ReactiveRef<File[]>;
   password: string;
 }
 
@@ -41,9 +42,9 @@ function useEncrypt({ files, password }: UseEncryptProps) {
       requestIdleCallback(async () => {
         const encryptKey = await argon2Encrypter.hash(password);
         setMessage(t("aes_encrypt_progress_message"));
-        const percentageUnit = 100 / files.length;
+        const percentageUnit = 100 / files.current.length;
         const encryptedFiles = await Promise.all(
-          files.map(async (file) => {
+          files.current.map(async (file) => {
             const base64File = await getBase64FromFile(file);
             const encryptedBase64File = await aesEncrypter.hash(
               base64File,
@@ -80,7 +81,7 @@ function useEncrypt({ files, password }: UseEncryptProps) {
       const encryptedFiles = await new Promise<string[]>((resolve) => {
         requestIdleCallback(async () => {
           const encryptedFiles = await Promise.all(
-            files.map(async (file) => {
+            files.current.map(async (file) => {
               const base64File = await getBase64FromFile(file);
               const encryptedBase64File = await aesEncrypter.hash(
                 base64File,
