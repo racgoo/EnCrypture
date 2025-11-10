@@ -3,25 +3,27 @@ import { useLocale } from "@shares/locale";
 import { Input } from "antd";
 import { localeTable } from "../locale";
 import { Typography } from "antd";
+import { useReactiveState, type ReactiveRef } from "@racgoo/reactive-kit/react";
 
 const { Text } = Typography;
 
 interface PasswordInputProps {
-  password: string;
-  setPassword: (password: string) => void;
+  passwordRef: ReactiveRef<string>;
+  changePassword: (password: string) => void;
   error: string | null;
   placeholder: string;
   disabled: boolean;
 }
 
 function PasswordInput({
-  password,
-  setPassword,
+  passwordRef,
+  changePassword,
   error,
   placeholder,
   disabled,
 }: PasswordInputProps) {
   const { t } = useLocale(localeTable);
+  const passwordState = useReactiveState(passwordRef);
   return (
     <div
       style={{
@@ -39,8 +41,8 @@ function PasswordInput({
         size="large"
         placeholder={placeholder}
         prefix={<LockOutlined />}
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        value={passwordState}
+        onChange={(e) => changePassword(e.target.value)}
         style={{ background: "#222", color: "#fff" }}
       />
       {error && (

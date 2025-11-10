@@ -42,7 +42,7 @@ function EncryptPage() {
   const { t } = useLocale(localeTable);
   const { type } = useType();
   const { fileRef, addFile, deleteFile, clearFiles } = useFile();
-  const { password, changePassword, clearPassword, error, valid } =
+  const { passwordRef, changePassword, clearPassword, error, valid } =
     usePassword();
   const {
     clientEncrypt,
@@ -52,8 +52,8 @@ function EncryptPage() {
     done,
     clearEncryption,
   } = useEncrypt({
-    files: fileRef,
-    password,
+    fileRef: fileRef,
+    passwordRef: passwordRef,
   });
 
   const { encryptionConfigRef, clearEncryptionConfig, updateEncryptionConfig } =
@@ -77,12 +77,13 @@ function EncryptPage() {
   );
 
   const initializeInput = useCallback(() => {
+    // clear password input
     clearPassword();
-    // reset encryption config
+    // clear encryption config
     clearEncryptionConfig();
-    // reset encryption result
+    // clear encryption result
     clearEncryptionResult();
-    // reset files
+    // clear encryption progress
     clearEncryption();
     // clear files
     clearFiles();
@@ -193,8 +194,8 @@ function EncryptPage() {
 
             <PasswordInput
               disabled={loadingState}
-              password={password}
-              setPassword={changePassword}
+              changePassword={changePassword}
+              passwordRef={passwordRef}
               error={error}
               placeholder={t("password_placeholder")}
             />

@@ -12,8 +12,8 @@ import type { EncryptionType } from "../../../features/encrypt/type";
 import type { ReactiveRef } from "@racgoo/reactive-kit/react";
 
 interface UseEncryptProps {
-  files: ReactiveRef<File[]>;
-  password: string;
+  fileRef: ReactiveRef<File[]>;
+  passwordRef: ReactiveRef<string>;
 }
 
 interface EncryptResult {
@@ -22,7 +22,7 @@ interface EncryptResult {
   encryptedFiles: string[];
 }
 
-function useEncrypt({ files, password }: UseEncryptProps) {
+function useEncrypt({ fileRef, passwordRef }: UseEncryptProps) {
   const { t } = useLocale(localeTable);
   const [percentage, setPercentage] = useState(0);
   const [message, setMessage] = useState("");
@@ -40,11 +40,11 @@ function useEncrypt({ files, password }: UseEncryptProps) {
     setMessage(t("argon2_encrypt_progress_message"));
     const encryptedFiles = await new Promise<string[]>((resolve) => {
       requestIdleCallback(async () => {
-        const encryptKey = await argon2Encrypter.hash(password);
+        const encryptKey = await argon2Encrypter.hash(passwordRef.current);
         setMessage(t("aes_encrypt_progress_message"));
-        const percentageUnit = 100 / files.current.length;
+        const percentageUnit = 100 / fileRef.current.length;
         const encryptedFiles = await Promise.all(
-          files.current.map(async (file) => {
+          fileRef.current.map(async (file) => {
             const base64File = await getBase64FromFile(file);
             const encryptedBase64File = await aesEncrypter.hash(
               base64File,
@@ -68,20 +68,20 @@ function useEncrypt({ files, password }: UseEncryptProps) {
       encryptionId: null,
       encryptedFiles,
     };
-  }, [files, password, t]);
+  }, [t]);
 
   const serverEncrypt = useCallback(
     async (retryCount: number): Promise<EncryptResult> => {
       setDone(false);
       setPercentage(0);
       const { encryptionId, hashKey } = await getEncryptionKey({
-        password,
+        password: passwordRef.current,
         retryCount,
       });
       const encryptedFiles = await new Promise<string[]>((resolve) => {
         requestIdleCallback(async () => {
           const encryptedFiles = await Promise.all(
-            files.current.map(async (file) => {
+            fileRef.current.map(async (file) => {
               const base64File = await getBase64FromFile(file);
               const encryptedBase64File = await aesEncrypter.hash(
                 base64File,
@@ -103,7 +103,7 @@ function useEncrypt({ files, password }: UseEncryptProps) {
         encryptedFiles,
       };
     },
-    [files, password, t]
+    [t]
   );
 
   return {
