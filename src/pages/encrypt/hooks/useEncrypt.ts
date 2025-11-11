@@ -1,15 +1,15 @@
 import { aesEncrypter, argon2Encrypter } from "@features/encrypt";
 import { getBase64FromFile } from "@features/file";
 
+import { getEncryptionKey } from "@features/encrypt";
 import { useLocale } from "@shares/locale";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { flushSync } from "react-dom";
 import { localeTable } from "../locale";
-import { getEncryptionKey } from "@features/encrypt";
 
-import { CLIENT_ENCRYPT_TYPE, SERVER_ENCRYPT_TYPE } from "../constants";
+import { useReactiveRef, type ReactiveRef } from "@racgoo/reactive-kit/react";
 import type { EncryptionType } from "../../../features/encrypt/type";
-import type { ReactiveRef } from "@racgoo/reactive-kit/react";
+import { CLIENT_ENCRYPT_TYPE, SERVER_ENCRYPT_TYPE } from "../constants";
 
 interface UseEncryptProps {
   fileRef: ReactiveRef<File[]>;
@@ -22,26 +22,35 @@ interface EncryptResult {
   encryptedFiles: string[];
 }
 
+interface EncryptionStatusType {
+  percentage: number;
+  message: string;
+  done: boolean;
+}
+
 function useEncrypt({ fileRef, passwordRef }: UseEncryptProps) {
   const { t } = useLocale(localeTable);
-  const [percentage, setPercentage] = useState(0);
-  const [message, setMessage] = useState("");
-  const [done, setDone] = useState(false);
 
-  const clearEncryption = useCallback(() => {
-    setDone(false);
-    setPercentage(0);
-    setMessage("");
+  const encryptionStatusRef = useReactiveRef({
+    percentage: 0,
+    message: "",
+    done: false,
+  });
+
+  const clearEncryptionStatus = useCallback(() => {
+    encryptionStatusRef.current.done = false;
+    encryptionStatusRef.current.percentage = 0;
+    encryptionStatusRef.current.message = "";
   }, []);
 
   const clientEncrypt = useCallback(async (): Promise<EncryptResult> => {
-    setDone(false);
-    setPercentage(0);
-    setMessage(t("argon2_encrypt_progress_message"));
+    encryptionStatusRef.current.done = false;
+    encryptionStatusRef.current.percentage = 0;
+    encryptionStatusRef.current.message = t("argon2_encrypt_progress_message");
     const encryptedFiles = await new Promise<string[]>((resolve) => {
       requestIdleCallback(async () => {
         const encryptKey = await argon2Encrypter.hash(passwordRef.current);
-        setMessage(t("aes_encrypt_progress_message"));
+        encryptionStatusRef.current.message = t("aes_encrypt_progress_message");
         const percentageUnit = 100 / fileRef.current.length;
         const encryptedFiles = await Promise.all(
           fileRef.current.map(async (file) => {
@@ -51,15 +60,17 @@ function useEncrypt({ fileRef, passwordRef }: UseEncryptProps) {
               encryptKey
             );
             flushSync(() => {
-              setPercentage((prev) => Math.floor(prev + percentageUnit));
+              encryptionStatusRef.current.percentage = Math.floor(
+                encryptionStatusRef.current.percentage + percentageUnit
+              );
             });
             return encryptedBase64File;
           })
         );
         resolve(encryptedFiles);
-        setPercentage(100);
-        setMessage(t("encrypt_finished_message"));
-        setDone(true);
+        encryptionStatusRef.current.percentage = 100;
+        encryptionStatusRef.current.message = t("encrypt_finished_message");
+        encryptionStatusRef.current.done = true;
       });
     });
 
@@ -72,8 +83,8 @@ function useEncrypt({ fileRef, passwordRef }: UseEncryptProps) {
 
   const serverEncrypt = useCallback(
     async (retryCount: number): Promise<EncryptResult> => {
-      setDone(false);
-      setPercentage(0);
+      encryptionStatusRef.current.done = false;
+      encryptionStatusRef.current.percentage = 0;
       const { encryptionId, hashKey } = await getEncryptionKey({
         password: passwordRef.current,
         retryCount,
@@ -91,9 +102,9 @@ function useEncrypt({ fileRef, passwordRef }: UseEncryptProps) {
             })
           );
           resolve(encryptedFiles);
-          setPercentage(100);
-          setMessage(t("encrypt_finished_message"));
-          setDone(true);
+          encryptionStatusRef.current.percentage = 100;
+          encryptionStatusRef.current.message = t("encrypt_finished_message");
+          encryptionStatusRef.current.done = true;
         });
       });
 
@@ -109,11 +120,9 @@ function useEncrypt({ fileRef, passwordRef }: UseEncryptProps) {
   return {
     clientEncrypt,
     serverEncrypt,
-    percentage,
-    message,
-    done,
-    clearEncryption,
+    clearEncryptionStatus,
+    encryptionStatusRef,
   };
 }
 
-export { useEncrypt };
+export { useEncrypt, type EncryptionStatusType };

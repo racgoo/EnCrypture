@@ -5,26 +5,26 @@ import { useCallback } from "react";
 import { localeTable } from "../locale";
 import { useLocale } from "@shares/locale";
 import { useLanguage } from "@shares/locale/hooks/useLanguage";
-import type { EncryptionResultType } from "..";
+import type { EncryptionConfigType, EncryptionResultType } from "..";
 import { useReactiveState, type ReactiveRef } from "@racgoo/reactive-kit/react";
+import type { EncryptionStatusType } from "../hooks/useEncrypt";
 
 interface EncryptionResultProps {
-  message: string;
-  percentage: number;
-  finished: boolean;
-  done: boolean;
+  encryptionConfigRef: ReactiveRef<EncryptionConfigType>;
+  encryptionStatusRef: ReactiveRef<EncryptionStatusType>;
   encryptionResultRef: ReactiveRef<EncryptionResultType>;
 }
 
 function EncryptionResult({
-  message,
-  percentage,
-  finished,
-  done,
+  encryptionConfigRef,
+  encryptionStatusRef,
   encryptionResultRef,
 }: EncryptionResultProps) {
   const { t } = useLocale(localeTable);
   const encryptionResultState = useReactiveState(encryptionResultRef);
+  const encryptionStatusState = useReactiveState(encryptionStatusRef);
+  const encryptionConfigState = useReactiveState(encryptionConfigRef);
+
   const { lang } = useLanguage();
 
   const handleDownloadEncryptedHtml = useCallback(() => {
@@ -38,7 +38,7 @@ function EncryptionResult({
     downloadHtml(redirectionHtmlTemplete);
   }, [encryptionResultState, lang]);
 
-  if (!done) {
+  if (!encryptionStatusState.done) {
     return null;
   }
 
@@ -59,9 +59,9 @@ function EncryptionResult({
         marginTop: 24,
       }}
     >
-      {percentage > 0 && (
+      {encryptionStatusState.percentage > 0 && (
         <Progress
-          percent={percentage}
+          percent={encryptionStatusState.percentage}
           showInfo={true}
           strokeColor={{
             "0%": "#a0c4ff",
@@ -74,15 +74,15 @@ function EncryptionResult({
         style={{
           fontSize: "1.08rem",
           fontWeight: 500,
-          marginBottom: finished ? 18 : 0,
+          marginBottom: encryptionConfigState.finished ? 18 : 0,
           textAlign: "center",
           letterSpacing: "-0.5px",
           color: "#e0e0e0",
         }}
       >
-        {message}
+        {encryptionStatusState.message}
       </div>
-      {finished && (
+      {encryptionConfigState.finished && (
         <button
           type="button"
           onClick={handleDownloadEncryptedHtml}

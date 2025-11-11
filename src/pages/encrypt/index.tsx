@@ -47,10 +47,8 @@ function EncryptPage() {
   const {
     clientEncrypt,
     serverEncrypt,
-    percentage,
-    message,
-    done,
-    clearEncryption,
+    clearEncryptionStatus,
+    encryptionStatusRef,
   } = useEncrypt({
     fileRef: fileRef,
     passwordRef: passwordRef,
@@ -66,11 +64,6 @@ function EncryptPage() {
     (ref) => ref.current.loading
   );
 
-  const finishedRef = useReactiveSubRef(
-    encryptionConfigRef,
-    (ref) => ref.current.finished
-  );
-
   const retryCountRef = useReactiveSubRef(
     encryptionConfigRef,
     (ref) => ref.current.retryCount
@@ -84,15 +77,13 @@ function EncryptPage() {
     // clear encryption result
     clearEncryptionResult();
     // clear encryption progress
-    clearEncryption();
+    clearEncryptionStatus();
     // clear files
     clearFiles();
   }, []);
 
   // reactive state for loading
   const loadingState = useReactiveState(loadingRef);
-  // reactive state for finished
-  const finishedState = useReactiveState(finishedRef);
 
   // update encryption data(result and config) after encrypt
   const updateEncryptionData = useCallback(
@@ -203,11 +194,9 @@ function EncryptPage() {
             <RetryCountInput retryCountRef={retryCountRef} />
 
             <EncryptionResult
-              message={message}
-              percentage={percentage}
-              finished={finishedState}
+              encryptionConfigRef={encryptionConfigRef}
+              encryptionStatusRef={encryptionStatusRef}
               encryptionResultRef={encryptionResultRef}
-              done={done}
             />
 
             <EncryptButton
