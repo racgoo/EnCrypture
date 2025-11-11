@@ -19,6 +19,7 @@ function usePassword() {
   const { t } = useLocale(localeTable);
   const passwordRef = useReactiveRef<string>("");
   const passwordState = useReactiveState(passwordRef);
+
   const error = useMemo(() => {
     if (passwordState.length === 0) {
       return null;

@@ -85,6 +85,9 @@ function EncryptPage() {
   // reactive state for loading
   const loadingState = useReactiveState(loadingRef);
 
+  // reactive state for files
+  const fileState = useReactiveState(fileRef);
+
   // update encryption data(result and config) after encrypt
   const updateEncryptionData = useCallback(
     (
@@ -128,12 +131,11 @@ function EncryptPage() {
 
   // button disabled(disable double click)
   const buttonDisabled = useMemo(
-    () =>
-      fileRef.current.length === 0 ||
-      valid === false ||
-      encryptionConfigRef.current.loading,
-    [valid, loadingState]
+    () => fileState.length === 0 || valid === false || loadingState,
+    [valid, loadingState, fileState]
   );
+
+  console.log(buttonDisabled, [valid, loadingState]);
 
   // handle encrypt(client or server)
   const handleEncrypt = useCallback(() => {
